@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "files": [],
-  "include": [],
+  "include": ["eslint.config.js"],
   "references": [
     {
       "path": "./tsconfig.editor.json"
