@@ -105,7 +105,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['eslint.config.js', 'src/main.server.ts'],
+    files: ['eslint.config.js', 'tailwind.config.js', 'src/main.server.ts'],
     rules: {
       'import/no-default-export': 'off',
     },
