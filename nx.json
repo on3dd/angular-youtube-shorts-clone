@@ -51,5 +51,9 @@
       "unitTestRunner": "jest"
     }
   },
-  "defaultProject": "angular-shorts-clone"
+  "defaultProject": "angular-shorts-clone",
+  "@nx/angular:component": {
+    "style": "scss",
+    "changeDetection": "OnPush"
+  }
 }
