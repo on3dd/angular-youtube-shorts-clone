@@ -5,7 +5,11 @@ import { join } from 'path';
 export default {
   content: [join(__dirname, 'src/**/!(*.stories|*.spec).{ts,html}'), ...createGlobPatternsForDependencies(__dirname)],
   theme: {
-    extend: {},
+    extend: {
+      aspectRatio: {
+        shorts: '9 / 16',
+      },
+    },
   },
   plugins: [],
 };
