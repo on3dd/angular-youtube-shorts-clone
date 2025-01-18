@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-2 sm:gap-4">
-  @for (item of [1, 2, 3]; track $index) {
-    <app-clip class="h-full" />
+  @for (item of clipsList(); track item.data.id) {
+    <app-clip [data]="item.data" class="h-full" />
   }
 </div>

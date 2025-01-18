@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RedditPostData } from 'src/app/shared/types/reddit.types';
 
 @Component({
   selector: 'app-clip-video',
@@ -7,4 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './clip-video.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClipVideoComponent {}
+export class ClipVideoComponent {
+  readonly data = input.required<RedditPostData>();
+}

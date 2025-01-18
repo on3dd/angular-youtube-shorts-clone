@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
 import { ClipComponent } from './clip/clip.component';
+import { MOCK_API_RESPONSE } from './clip/utils/constants';
 
 @Component({
   selector: 'app-clips',
@@ -10,4 +11,8 @@ import { ClipComponent } from './clip/clip.component';
   host: { class: 'flex ' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClipsComponent {}
+export class ClipsComponent {
+  private readonly clipsResponse = signal(MOCK_API_RESPONSE);
+
+  readonly clipsList = computed(() => this.clipsResponse().data.children);
+}

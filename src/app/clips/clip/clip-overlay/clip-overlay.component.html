@@ -1,19 +1,21 @@
 <div class="flex flex-col gap-1">
   <!-- Profile row -->
   <div class="flex gap-2 items-center flex-nowrap">
-    <a href="/" class="rounded-full grow-0 shrink-0 basis-[32px] w-[32px] h-[32px] bg-red-500 overflow-hidden">
+    <!-- <a href="/" class="rounded-full grow-0 shrink-0 basis-[32px] w-[32px] h-[32px] bg-red-500 overflow-hidden">
       <span class="sr-only">Open profile</span>
-    </a>
-    <a href="/" class="text-sm text-zinc-50 hover:text-zinc-100 font-semibold truncate"
-      >&#64;some_freak_123some_freak_123</a
+    </a> -->
+
+    <span class="text-sm text-zinc-50 hover:text-zinc-100 font-semibold truncate"> u/{{ data().author }}</span>
+
+    <a
+      [href]="data().url"
+      target="_blank"
+      class="rounded-full text-zinc-800 bg-zinc-50 hover:bg-zinc-200 px-3 py-2 text-xs font-semibold"
     >
-    <button class="rounded-full text-zinc-800 bg-zinc-50 hover:bg-zinc-200 px-3 py-2 text-xs font-semibold">
-      Subscribe
-    </button>
+      Go to original post
+    </a>
   </div>
 
   <!-- Description row -->
-  <div class="text-sm truncate">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus reiciendis a facilis porro cupiditate enim?
-  </div>
+  <div class="text-sm truncate">{{ data().title }}</div>
 </div>

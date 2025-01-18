@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   matArrowDownward,
@@ -10,12 +10,13 @@ import {
   matThumbDown,
   matThumbUp,
 } from '@ng-icons/material-icons/baseline';
+import { RedditPostData } from 'src/app/shared/types/reddit.types';
 
 type MenuAction = {
   // name for screen readers
   name: string;
   icon: string;
-  label?: string;
+  label?: string | number;
   active?: boolean;
   // TODO: add on-click action
 };
@@ -32,14 +33,19 @@ type MenuAction = {
   ],
 })
 export class ClipActionsComponent {
-  protected readonly actions: MenuAction[] = [
-    { name: 'Like', label: '356k', icon: 'matThumbUp', active: true },
-    { name: 'Dislike', label: 'Dislike', icon: 'matThumbDown' },
-    { name: 'Comment', label: '2 742', icon: 'matComment' },
-    { name: 'Share', label: 'Share', icon: 'matShare' },
-    { name: 'More', icon: 'matMoreVert' },
-    // TODO: Show only on md and above
-    { name: 'Previous', icon: 'matArrowUpward' },
-    { name: 'Next', icon: 'matArrowDownward' },
-  ];
+  readonly data = input.required<RedditPostData>();
+
+  readonly actions = computed<MenuAction[]>(() => {
+    const data = this.data();
+    return [
+      { name: 'Like', icon: 'matThumbUp', label: data.ups, active: true },
+      { name: 'Dislike', icon: 'matThumbDown', label: 'Dislike' },
+      { name: 'Comment', icon: 'matComment', label: data.num_comments },
+      { name: 'Share', icon: 'matShare', label: 'Share' },
+      { name: 'More', icon: 'matMoreVert' },
+      // TODO: Show only on md and above
+      { name: 'Previous', icon: 'matArrowUpward' },
+      { name: 'Next', icon: 'matArrowDownward' },
+    ];
+  });
 }

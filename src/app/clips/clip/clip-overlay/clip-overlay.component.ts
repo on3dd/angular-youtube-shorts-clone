@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RedditPostData } from 'src/app/shared/types/reddit.types';
 
 @Component({
   selector: 'app-clip-overlay',
@@ -7,4 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './clip-overlay.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClipOverlayComponent {}
+export class ClipOverlayComponent {
+  readonly data = input.required<RedditPostData>();
+}
