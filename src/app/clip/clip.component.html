@@ -1,0 +1,20 @@
+<!-- Clip container -->
+<div class="h-full relative text-zinc-100">
+  <!-- Clip content -->
+  <div class="aspect-shorts flex h-full max-w-full overflow-hidden">
+    <!-- Clip video -->
+    <div class="w-full bg-zinc-700 overflow-hidden rounded-xl md:rounded-2xl lg:rounded-3xl">
+      <app-clip-video />
+    </div>
+
+    <!-- Clip overlay -->
+    <div class="absolute bottom-0 mt-auto p-3 w-full">
+      <app-clip-overlay />
+    </div>
+  </div>
+
+  <!-- Clip actions -->
+  <div class="absolute top-1/2 right-2 sm:right-0 sm:left-[calc(100%+theme(spacing.3))] -translate-y-1/2">
+    <app-clip-actions />
+  </div>
+</div>

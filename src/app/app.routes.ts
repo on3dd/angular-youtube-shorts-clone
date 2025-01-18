@@ -1,3 +1,14 @@
 import { Route } from '@angular/router';
 
-export const appRoutes: Route[] = [];
+import { ClipComponent } from './clip/clip.component';
+
+export const appRoutes: Route[] = [
+  {
+    path: '',
+    component: ClipComponent,
+  },
+  {
+    path: ':id',
+    component: ClipComponent,
+  },
+];
