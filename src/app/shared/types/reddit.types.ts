@@ -144,7 +144,7 @@ export interface RedditPostData extends RedditApiData {
     };
   };
   media_only: boolean;
-  media: {
+  media?: {
     reddit_video?: RedditVideo;
     oembed?: MediaOembed;
   };
