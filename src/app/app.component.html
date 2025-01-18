@@ -24,18 +24,16 @@
     </div>
 
     <!-- Clip actions -->
-    <div
-      class="absolute top-1/2 right-2 md:right-0 md:left-[calc(100%+theme(spacing.3))] -translate-y-1/2 text-zinc-50"
-    >
+    <div class="absolute top-1/2 right-2 sm:right-0 sm:left-[calc(100%+theme(spacing.3))] -translate-y-1/2">
       <div class="flex flex-col gap-4">
         @for (item of actions; track $index; let first = $first) {
-          <button class="text-center w-12 text-zinc-800 dark:text-zinc-50">
+          <button class="text-center w-12 text-zinc-50 sm:text-zinc-800 sm:dark:text-zinc-50">
             <div
               class="w-full h-12 mb-1 rounded-full relative"
               [ngClass]="
                 item.active
-                  ? 'text-zinc-50 bg-zinc-800 hover:bg-zinc-800/90 dark:text-zinc-800 dark:bg-zinc-50 dark:hover:bg-zinc-50/90'
-                  : 'bg-zinc-800/10 hover:bg-zinc-800/15 dark:text-zinc-50 dark:bg-zinc-50/10 dark:hover:bg-zinc-50/20 '
+                  ? 'text-zinc-800 bg-zinc-50 hover:bg-zinc-50/90 sm:text-zinc-50 sm:bg-zinc-800 sm:hover:bg-zinc-800/90 sm:dark:text-zinc-800 sm:dark:bg-zinc-50 sm:dark:hover:bg-zinc-50/90'
+                  : 'bg-zinc-50/10 hover:bg-zinc-50/20 sm:bg-zinc-800/10 sm:hover:bg-zinc-800/15 sm:dark:bg-zinc-50/10 sm:dark:hover:bg-zinc-50/20'
               "
             >
               <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 leading-none">
