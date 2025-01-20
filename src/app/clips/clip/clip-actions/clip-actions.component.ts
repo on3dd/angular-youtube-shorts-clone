@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   matArrowDownward,
@@ -18,7 +18,7 @@ type MenuAction = {
   icon: string;
   label?: string | number;
   active?: boolean;
-  // TODO: add on-click action
+  onClick?: () => void;
 };
 
 @Component({
@@ -35,6 +35,9 @@ type MenuAction = {
 export class ClipActionsComponent {
   readonly data = input.required<RedditPostData>();
 
+  readonly prevItem = output<RedditPostData>();
+  readonly nextItem = output<RedditPostData>();
+
   readonly actions = computed<MenuAction[]>(() => {
     const data = this.data();
     return [
@@ -44,8 +47,8 @@ export class ClipActionsComponent {
       { name: 'Share', icon: 'matShare', label: 'Share' },
       { name: 'More', icon: 'matMoreVert' },
       // TODO: Show only on md and above
-      { name: 'Previous', icon: 'matArrowUpward' },
-      { name: 'Next', icon: 'matArrowDownward' },
+      { name: 'Previous', icon: 'matArrowUpward', onClick: () => this.prevItem.emit(this.data()) },
+      { name: 'Next', icon: 'matArrowDownward', onClick: () => this.nextItem.emit(this.data()) },
     ];
   });
 }

@@ -1,6 +1,9 @@
 <div class="flex flex-col gap-2">
   @for (item of actions(); track item.name) {
-    <button class="text-center w-12 text-zinc-50 sm:text-zinc-800 sm:dark:text-zinc-50 cursor-default">
+    <button
+      class="text-center w-12 text-zinc-50 sm:text-zinc-800 sm:dark:text-zinc-50 cursor-default"
+      (click)="item?.onClick()"
+    >
       <div
         class="relative w-full h-12 mb-1 rounded-full cursor-pointer"
         [ngClass]="

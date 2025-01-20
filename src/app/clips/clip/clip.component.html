@@ -15,6 +15,6 @@
 
   <!-- Clip actions -->
   <div class="absolute top-1/2 right-2 sm:right-0 sm:left-[calc(100%+theme(spacing.3))] -translate-y-1/2">
-    <app-clip-actions [data]="data()" />
+    <app-clip-actions [data]="data()" (prevItem)="prevItem.emit($event)" (nextItem)="nextItem.emit($event)" />
   </div>
 </div>
