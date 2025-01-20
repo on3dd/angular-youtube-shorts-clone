@@ -32,6 +32,7 @@ export class ClipsComponent {
   });
 
   readonly clipsList = this.clipsService.totalClipsList;
+  readonly activeItemIdx = this.clipsService.activeItemIdx;
 
   constructor() {
     effect(() => {

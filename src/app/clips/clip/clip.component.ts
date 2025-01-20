@@ -15,6 +15,7 @@ import { ClipVideoComponent } from './clip-video/clip-video.component';
 })
 export class ClipComponent {
   readonly data = input.required<RedditPostData>();
+  readonly active = input.required<boolean>();
 
   readonly prevItem = output<RedditPostData>();
   readonly nextItem = output<RedditPostData>();
