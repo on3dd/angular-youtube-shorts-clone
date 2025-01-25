@@ -1,14 +1,14 @@
 <!-- Clip container -->
 <div class="h-full relative text-zinc-100">
   <!-- Clip content -->
-  <div class="aspect-shorts flex h-full max-w-full overflow-hidden">
+  <div class="aspect-shorts relative flex h-full max-w-full overflow-hidden rounded-xl md:rounded-2xl lg:rounded-3xl">
     <!-- Clip video -->
-    <div class="w-full bg-black overflow-hidden rounded-xl md:rounded-2xl lg:rounded-3xl">
+    <div class="w-full bg-black">
       <app-clip-video [data]="data()" [active]="active()" />
     </div>
 
     <!-- Clip overlay -->
-    <div class="absolute bottom-0 mt-auto p-3 w-full">
+    <div class="absolute bottom-0 mt-auto p-3 w-full bg-clip-overlay">
       <app-clip-overlay [data]="data()" />
     </div>
   </div>
