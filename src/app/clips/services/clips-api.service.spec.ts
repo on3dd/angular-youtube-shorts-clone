@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ClipsService } from './clips.service';
+import { ClipsApiService } from './clips-api.service';
 
 describe('ClipsApiService', () => {
-  let service: ClipsService;
+  let service: ClipsApiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ClipsService);
+    service = TestBed.inject(ClipsApiService);
   });
 
   it('should be created', () => {

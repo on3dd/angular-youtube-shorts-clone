@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ClipsService } from './clips.service';
+import { ClipsFacade } from './clips.facade';
 
-describe('ClipsApiService', () => {
-  let service: ClipsService;
+describe('ClipsService', () => {
+  let service: ClipsFacade;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ClipsService);
+    service = TestBed.inject(ClipsFacade);
   });
 
   it('should be created', () => {

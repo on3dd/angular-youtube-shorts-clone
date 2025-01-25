@@ -2,6 +2,7 @@ import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -11,12 +12,11 @@ import {
 import { Router } from '@angular/router';
 
 import { ClipComponent } from './clip/clip.component';
-import { ClipsService } from './services/clips.service';
+import { ClipsFacade } from './services/clips.facade';
 
 @Component({
   selector: 'app-clips',
   imports: [ClipComponent],
-  providers: [ClipsService],
   templateUrl: './clips.component.html',
   styleUrl: './clips.component.css',
   host: { class: 'flex' },
@@ -25,18 +25,21 @@ import { ClipsService } from './services/clips.service';
 export class ClipsComponent {
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
-  private readonly clipsService = inject(ClipsService);
+  private readonly clipsFacade = inject(ClipsFacade);
 
   private readonly clipsRefs = viewChildren<ClipComponent, ElementRef<HTMLElement>>(ClipComponent, {
     read: ElementRef,
   });
 
-  readonly clipsList = this.clipsService.totalClipsList;
-  readonly activeItemIdx = this.clipsService.activeItemIdx;
+  protected readonly vm = computed(() => ({
+    clipsList: this.clipsFacade.clipsList(),
+    activeItem: this.clipsFacade.activeItem(),
+    activeItemIdx: this.clipsFacade.activeItemIdx(),
+  }));
 
   constructor() {
     effect(() => {
-      const activeItem = this.clipsService.activeItem();
+      const activeItem = this.clipsFacade.activeItem();
 
       if (activeItem) {
         this.router.navigate(['/', activeItem.data.name]);
@@ -46,7 +49,7 @@ export class ClipsComponent {
     afterNextRender(() => {
       effect(
         () => {
-          const idx = this.clipsService.activeItemIdx();
+          const idx = this.clipsFacade.activeItemIdx();
           this.clipsRefs()[idx]?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         },
         { injector: this.injector },
@@ -55,10 +58,10 @@ export class ClipsComponent {
   }
 
   prevItem() {
-    this.clipsService.prevItem();
+    this.clipsFacade.prevItem();
   }
 
   nextItem() {
-    this.clipsService.nextItem();
+    this.clipsFacade.nextItem();
   }
 }

@@ -1,5 +1,12 @@
-<div class="flex flex-col">
-  @for (item of clipsList(); track item.data.id; let idx = $index) {
-    <app-clip [data]="item.data" [active]="idx === activeItemIdx()" (prevItem)="prevItem()" (nextItem)="nextItem()" />
-  }
-</div>
+@if (vm(); as vm) {
+  <div class="flex flex-col">
+    @for (item of vm.clipsList; track item.data.id; let idx = $index) {
+      <app-clip
+        [data]="item.data"
+        [active]="idx === vm.activeItemIdx"
+        (prevItem)="prevItem()"
+        (nextItem)="nextItem()"
+      />
+    }
+  </div>
+}

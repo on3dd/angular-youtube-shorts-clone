@@ -1,19 +1,14 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { delay, map, of, scan } from 'rxjs';
+import { map, scan } from 'rxjs';
 import { RedditPostObj } from 'src/app/shared/types/reddit.types';
 
-import { MOCK_API_RESPONSE } from '../clip/utils/constants';
+import { ClipsApiService, PAGE_SIZE } from './clips-api.service';
 
-const PAGE_SIZE = 5;
-
-const mockApiRequest = (page: number) => {
-  const offset = page * PAGE_SIZE;
-  return of(MOCK_API_RESPONSE.data.children.slice(offset, offset + PAGE_SIZE)).pipe(delay(1000));
-};
-
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ClipsService {
+  private readonly clipsApiService = inject(ClipsApiService);
+
   private readonly _activeItemIdx = signal<number>(0);
   readonly activeItemIdx = this._activeItemIdx.asReadonly();
 
@@ -27,7 +22,7 @@ export class ClipsService {
 
   private readonly clipsResourse = rxResource({
     request: this.activePageIdx,
-    loader: ({ request }) => mockApiRequest(request),
+    loader: ({ request }) => this.clipsApiService.getPosts(request),
   });
 
   private readonly _clipsList = computed(
