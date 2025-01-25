@@ -1,3 +1,4 @@
+<!-- TODO: disable preloading (for hls and dash additional configuration is required) -->
 <media-controller #controller nohotkeys class="block h-full">
   @let srcs = sources();
 
@@ -6,6 +7,6 @@
   } @else if (srcs.dashUrl) {
     <dash-video [src]="srcs.dashUrl" slot="media" crossorigin loop></dash-video>
   } @else {
-    <video [src]="srcs.fallbackUrl" slot="media" crossorigin loop></video>
+    <video [src]="srcs.fallbackUrl" slot="media" preload="metadata" crossorigin loop></video>
   }
 </media-controller>

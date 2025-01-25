@@ -44,11 +44,12 @@ export class ClipVideoComponent {
     afterNextRender(() => {
       effect(
         () => {
-          console.log(`${this.data().name}, active: ${this.active()}`);
+          // console.log(`${this.data().name}, active: ${this.active()}`);
 
           if (this.active()) {
             this.mediaWrapperRef().play();
           } else {
+            // TODO: Only trigger this method when clip is running
             this.mediaWrapperRef().stop();
           }
         },
@@ -58,7 +59,7 @@ export class ClipVideoComponent {
   }
 
   onInitFinished() {
-    console.log(`onInitFinished: name: ${this.data().name}, active: ${this.active()}`);
+    // console.log(`onInitFinished: name: ${this.data().name}, active: ${this.active()}`);
 
     if (this.active()) {
       this.mediaWrapperRef().play();

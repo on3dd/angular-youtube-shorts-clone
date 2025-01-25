@@ -50,7 +50,11 @@ export class ClipsComponent {
       effect(
         () => {
           const idx = this.clipsFacade.activeItemIdx();
-          this.clipsRefs()[idx]?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          this.clipsRefs()[idx]?.nativeElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
         },
         { injector: this.injector },
       );
