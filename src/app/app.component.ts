@@ -1,3 +1,7 @@
+import 'media-chrome';
+import 'hls-video-element';
+import 'dash-video-element';
+
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 

@@ -1,4 +1,1 @@
-<video #video loop disablepictureinpicture disableremoteplayback width="100%" preload="metadata" class="w-full h-full">
-  <!-- TODO: add preview -->
-  <source type="video/mp4" [src]="data().media!.reddit_video!.fallback_url" />
-</video>
+<app-media-wrapper [sources]="sources()" (initFinished)="onInitFinished()" />

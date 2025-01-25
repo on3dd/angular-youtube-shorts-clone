@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { MediaWrapperComponent } from './media-wrapper.component';
 
-describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+describe('MediaWrapperComponent', () => {
+  let component: MediaWrapperComponent;
+  let fixture: ComponentFixture<MediaWrapperComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [MediaWrapperComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(MediaWrapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

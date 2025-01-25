@@ -1,0 +1,11 @@
+<media-controller #controller nohotkeys class="block h-full">
+  @let srcs = sources();
+
+  @if (srcs.hlsUrl) {
+    <hls-video [src]="srcs.hlsUrl" slot="media" crossorigin loop></hls-video>
+  } @else if (srcs.dashUrl) {
+    <dash-video [src]="srcs.dashUrl" slot="media" crossorigin loop></dash-video>
+  } @else {
+    <video [src]="srcs.fallbackUrl" slot="media" crossorigin loop></video>
+  }
+</media-controller>
