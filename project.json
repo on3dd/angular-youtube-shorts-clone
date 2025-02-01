@@ -12,6 +12,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/angular-shorts-clone",
+        "outputMode": "server",
         "index": "./src/index.html",
         "browser": "./src/main.ts",
         "polyfills": ["zone.js"],
@@ -28,8 +29,7 @@
         "server": "src/main.server.ts",
         "ssr": {
           "entry": "src/server.ts"
-        },
-        "prerender": true
+        }
       },
       "configurations": {
         "production": {
