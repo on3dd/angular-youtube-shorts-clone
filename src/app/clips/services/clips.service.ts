@@ -1,19 +1,23 @@
 import { computed, effect, inject, Injectable, Signal, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import { derivedFrom } from 'ngxtension/derived-from';
-import { map, pipe, scan, tap } from 'rxjs';
+import { map, pipe, scan } from 'rxjs';
 import { RedditPostObj } from 'src/app/shared/types/reddit.types';
 
 import { ClipsApiService, PAGE_SIZE } from './clips-api.service';
 
 @Injectable({ providedIn: 'root' })
 export class ClipsService {
+  private readonly route = inject(ActivatedRoute);
   private readonly clipsApiService = inject(ClipsApiService);
 
+  /** Index of the active item. */
   private readonly _activeItemIdx = signal<number>(0);
   readonly activeItemIdx = this._activeItemIdx.asReadonly();
 
-  private _activePageIdx = derivedFrom(
+  /** Index of the last loaded page. */
+  private readonly _activePageIdx = derivedFrom(
     [this._activeItemIdx],
     pipe(
       map(([itemIdx]) => Math.floor((itemIdx + 1) / PAGE_SIZE)),
@@ -22,6 +26,7 @@ export class ClipsService {
     { initialValue: 0 },
   );
 
+  /** Name of item to pass to the next page request. */
   private readonly _afterItemName: Signal<string | null> = computed(() => {
     const pageIdx = this._activePageIdx();
     const clips = this.totalClipsList();
@@ -30,48 +35,34 @@ export class ClipsService {
       return clips[pageIdx * PAGE_SIZE - 1]?.data.name;
     }
 
+    console.log('route snapshot child id', this.route.snapshot.children[0].params['id']);
+
+    // return this.route.snapshot.children[0]?.params['id'] ?? null;
     return null;
   });
 
-  private readonly clipsResourse = rxResource({
+  /** Resourse that loads the next page of posts and updates when `afterItemName` changes. */
+  private readonly _clipsResourse = rxResource({
     request: this._afterItemName,
     loader: ({ request }) => this.clipsApiService.getPosts(request),
   });
 
-  private readonly _clipsList = computed(() => {
-    const clips = this.clipsResourse.value();
+  // private readonly _clipsList = computed(() => {
+  //   return this.clipsResourse.value() ?? [];
+  // });
 
-    if (!clips) return [];
-
-    console.log('clips from server', clips);
-
-    return clips
-      .map((clip) => {
-        // Handle cases when post itself doesn't have a video, but has crossposts
-        if (!clip.data?.secure_media?.reddit_video && clip.data?.crosspost_parent_list) {
-          const crossPostWithMedia = clip.data?.crosspost_parent_list.find(
-            (crossPost) => crossPost.secure_media?.reddit_video,
-          );
-
-          if (crossPostWithMedia) {
-            clip.data.secure_media = crossPostWithMedia.secure_media;
-          }
-        }
-
-        return clip;
-      })
-      .filter((post) => post?.data.secure_media?.reddit_video);
-  });
-
+  /** Total list of all loaded clips. */
   readonly totalClipsList = derivedFrom(
-    [this._clipsList],
+    // [this._clipsList],
+    [this._clipsResourse.value],
     pipe(
-      tap(([newClips]) => console.log('newClips', newClips)),
-      scan((prev, [curr]) => prev.concat(curr), [] as RedditPostObj[]),
+      map(([posts]) => posts ?? []),
+      scan((prev, curr) => prev.concat(curr), [] as RedditPostObj[]),
     ),
     { initialValue: [] },
   );
 
+  /** Active clip to display in UI. Quite obvious. */
   readonly activeItem = computed(() => this.totalClipsList()[this.activeItemIdx()]);
 
   // TODO: remove after testing

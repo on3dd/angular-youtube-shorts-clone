@@ -41,6 +41,7 @@ export class ClipsComponent {
     effect(() => {
       const activeItem = this.clipsFacade.activeItem();
 
+      // TODO: looks like initial redirection breaks autoplay of the first element?
       if (activeItem) {
         this.router.navigate(['/', activeItem.data.name]);
       }

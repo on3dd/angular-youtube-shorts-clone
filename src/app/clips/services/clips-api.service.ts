@@ -16,10 +16,32 @@ export class ClipsApiService {
 
     return this.http
       .get<RedditListingObj<RedditPostObj>>(BASE_URL, { params, responseType: 'json' })
-      .pipe(map((response) => response.data.children));
+      .pipe(map((response) => this.filterPostsWithMedia(response.data.children)));
   }
 
   private buildHttpParams(params: Record<string, any>): HttpParams {
     return Object.entries(params).reduce((acc, [key, value]) => (value ? acc.set(key, value) : acc), new HttpParams());
+  }
+
+  private filterPostsWithMedia(posts: RedditPostObj[]) {
+    return (
+      posts
+        // Handle cases when post itself doesn't have a video, but has crossposts.
+        .map((post) => {
+          if (!post.data?.secure_media?.reddit_video && post.data?.crosspost_parent_list) {
+            const crossPostWithMedia = post.data?.crosspost_parent_list.find(
+              (crossPost) => crossPost.secure_media?.reddit_video,
+            );
+
+            if (crossPostWithMedia) {
+              post.data.secure_media = crossPostWithMedia.secure_media;
+            }
+          }
+
+          return post;
+        })
+        // Filter out posts without media.
+        .filter((post) => post?.data.secure_media?.reddit_video)
+    );
   }
 }
