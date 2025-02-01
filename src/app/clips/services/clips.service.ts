@@ -1,14 +1,15 @@
 import { computed, effect, inject, Injectable, Signal, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
 import { derivedFrom } from 'ngxtension/derived-from';
-import { map, pipe, scan } from 'rxjs';
+import { filter, first, map, pipe, scan, tap } from 'rxjs';
 import { RedditPostObj } from 'src/app/shared/types/reddit.types';
 
 import { ClipsApiService, PAGE_SIZE } from './clips-api.service';
 
 @Injectable({ providedIn: 'root' })
 export class ClipsService {
+  private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly clipsApiService = inject(ClipsApiService);
 
@@ -41,20 +42,15 @@ export class ClipsService {
     return null;
   });
 
-  /** Resourse that loads the next page of posts and updates when `afterItemName` changes. */
-  private readonly _clipsResourse = rxResource({
+  /** Resource that loads the next page of posts and updates when `afterItemName` changes. */
+  private readonly _clipsResource = rxResource({
     request: this._afterItemName,
     loader: ({ request }) => this.clipsApiService.getPosts(request),
   });
 
-  // private readonly _clipsList = computed(() => {
-  //   return this.clipsResourse.value() ?? [];
-  // });
-
   /** Total list of all loaded clips. */
   readonly totalClipsList = derivedFrom(
-    // [this._clipsList],
-    [this._clipsResourse.value],
+    [this._clipsResource.value],
     pipe(
       map(([posts]) => posts ?? []),
       scan((prev, curr) => prev.concat(curr), [] as RedditPostObj[]),
@@ -73,6 +69,15 @@ export class ClipsService {
       console.log('_afterItemName:', this._afterItemName());
       console.groupEnd();
     });
+
+    // Route params are available after the ActivationEnd event
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof ActivationEnd),
+        first(),
+        tap((event) => console.log('event', event)),
+      )
+      .subscribe();
   }
 
   prevItem() {
