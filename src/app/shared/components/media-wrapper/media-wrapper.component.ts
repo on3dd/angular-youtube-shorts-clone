@@ -6,6 +6,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   input,
+  isDevMode,
   output,
   viewChild,
 } from '@angular/core';
@@ -33,6 +34,9 @@ export class MediaWrapperComponent {
   private readonly mediaControllerRef = viewChild.required<ElementRef<MediaController>>('controller');
 
   private readonly mediaControllerEl = computed(() => this.mediaControllerRef().nativeElement);
+
+  // TODO: Add "Mute" button and provide this value to it
+  protected readonly isVideoMutedByDefault = isDevMode();
 
   constructor() {
     // Manually start video playback when the `MEDIA_BUFFERED` event fires for the first time when `autoplay` is `true`.

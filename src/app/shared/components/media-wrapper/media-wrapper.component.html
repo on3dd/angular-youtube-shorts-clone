@@ -1,12 +1,20 @@
 <!-- TODO: disable preloading (for hls and dash additional configuration is required) -->
+<!-- TODO: add "play" and "mute" buttons -->
 <media-controller #controller nohotkeys class="block h-full">
   @let srcs = sources();
 
   @if (srcs.hlsUrl) {
-    <hls-video [src]="srcs.hlsUrl" slot="media" crossorigin loop></hls-video>
+    <hls-video [src]="srcs.hlsUrl" slot="media" crossorigin loop [muted]="isVideoMutedByDefault"></hls-video>
   } @else if (srcs.dashUrl) {
-    <dash-video [src]="srcs.dashUrl" slot="media" crossorigin loop></dash-video>
+    <dash-video [src]="srcs.dashUrl" slot="media" crossorigin loop [muted]="isVideoMutedByDefault"></dash-video>
   } @else {
-    <video [src]="srcs.fallbackUrl" slot="media" preload="metadata" crossorigin loop></video>
+    <video
+      [src]="srcs.fallbackUrl"
+      slot="media"
+      preload="metadata"
+      crossorigin
+      loop
+      [muted]="isVideoMutedByDefault"
+    ></video>
   }
 </media-controller>
