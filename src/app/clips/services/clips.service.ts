@@ -1,6 +1,7 @@
 import { computed, effect, inject, Injectable, Signal, signal } from '@angular/core';
-import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { map, scan, tap } from 'rxjs';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { derivedFrom } from 'ngxtension/derived-from';
+import { map, pipe, scan, tap } from 'rxjs';
 import { RedditPostObj } from 'src/app/shared/types/reddit.types';
 
 import { ClipsApiService, PAGE_SIZE } from './clips-api.service';
@@ -12,12 +13,14 @@ export class ClipsService {
   private readonly _activeItemIdx = signal<number>(0);
   readonly activeItemIdx = this._activeItemIdx.asReadonly();
 
-  private readonly _activePageIdx$ = toObservable(this.activeItemIdx).pipe(
-    map((idx) => Math.floor((idx + 1) / PAGE_SIZE)),
-    scan((prev, curr) => (curr > prev ? curr : prev), 0),
+  private _activePageIdx = derivedFrom(
+    [this._activeItemIdx],
+    pipe(
+      map(([itemIdx]) => Math.floor((itemIdx + 1) / PAGE_SIZE)),
+      scan((prev, curr) => (curr > prev ? curr : prev), 0),
+    ),
+    { initialValue: 0 },
   );
-
-  private readonly _activePageIdx = toSignal(this._activePageIdx$, { initialValue: 0 });
 
   private readonly _afterItemName: Signal<string | null> = computed(() => {
     const pageIdx = this._activePageIdx();
@@ -60,13 +63,14 @@ export class ClipsService {
       .filter((post) => post?.data.secure_media?.reddit_video);
   });
 
-  private readonly _totalClipsList$ = toObservable(this._clipsList).pipe(
-    tap((newClips) => console.log('newClips', newClips)),
-    scan((prev, curr) => prev.concat(curr), [] as RedditPostObj[]),
+  readonly totalClipsList = derivedFrom(
+    [this._clipsList],
+    pipe(
+      tap(([newClips]) => console.log('newClips', newClips)),
+      scan((prev, [curr]) => prev.concat(curr), [] as RedditPostObj[]),
+    ),
+    { initialValue: [] },
   );
-
-  /** Total list of the loaded items. */
-  readonly totalClipsList = toSignal(this._totalClipsList$, { initialValue: [] });
 
   readonly activeItem = computed(() => this.totalClipsList()[this.activeItemIdx()]);
 
