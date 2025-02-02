@@ -2,6 +2,9 @@ import { createAction, props } from '@ngrx/store';
 
 import { ClipsEntity } from './clips.models';
 
+// Set state transfered from server
+export const setTransferedState = createAction('[Clips Page] Set Transfered State', props<{ items: ClipsEntity[] }>());
+
 // Load initial clip
 export const loadInitialClip = createAction('[Clips Page] Load Initial Clip');
 export const loadInitialClipSuccess = createAction(

@@ -1,20 +1,26 @@
-import { inject, Injectable } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { inject, Injectable, makeStateKey, PLATFORM_ID, TransferState } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, exhaustMap, filter, first, map, scan, switchMap, tap } from 'rxjs';
+import { distinctUntilChanged, exhaustMap, filter, first, map, of, scan, switchMap, takeWhile, tap } from 'rxjs';
 
 import { ClipsApiService, PAGE_SIZE } from '../services/clips-api.service';
 import * as ClipsActions from './clips.actions';
+import { ClipsEntity } from './clips.models';
 import * as fromClips from './clips.reducer';
 import * as ClipsSelectors from './clips.selectors';
+
+const CLIPS_STATE_KEY = makeStateKey<ClipsEntity[]>('TRANSFERED_STATE');
 
 @Injectable()
 export class ClipsEffects {
   private readonly actions$ = inject(Actions);
   private readonly store = inject(Store<fromClips.ClipsState>);
 
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly transferState = inject(TransferState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly clipsApiService = inject(ClipsApiService);
@@ -35,14 +41,20 @@ export class ClipsEffects {
 
   readonly loadInitialPost$ = createEffect(() => {
     return this.initialName$.pipe(
-      switchMap((name) =>
-        this.clipsApiService.getInitialPost(name).pipe(
+      switchMap((name) => {
+        const transferedItems = this.transferState.get(CLIPS_STATE_KEY, []);
+
+        if (transferedItems.length > 0) {
+          return of(ClipsActions.setTransferedState({ items: transferedItems }));
+        }
+
+        return this.clipsApiService.getInitialPost(name).pipe(
           mapResponse({
             next: (item) => ClipsActions.loadInitialClipSuccess({ item }),
             error: (error) => ClipsActions.loadInitialClipFailure({ error }),
           }),
-        ),
-      ),
+        );
+      }),
     );
   });
 
@@ -82,6 +94,16 @@ export class ClipsEffects {
       ),
     );
   });
+
+  readonly setTranseferedState$ = createEffect(
+    () => {
+      return this.store.pipe(select(ClipsSelectors.selectAllClips)).pipe(
+        takeWhile(() => isPlatformServer(this.platformId)),
+        tap((items) => this.transferState.set(CLIPS_STATE_KEY, items)),
+      );
+    },
+    { dispatch: false },
+  );
 
   // TODO: Add proper error handling
   readonly handleError$ = createEffect(

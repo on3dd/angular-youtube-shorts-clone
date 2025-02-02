@@ -36,8 +36,6 @@ export class ClipsComponent {
   }));
 
   constructor() {
-    effect(() => console.log('vm', this.vm()));
-
     afterNextRender(() => {
       effect(
         () => {

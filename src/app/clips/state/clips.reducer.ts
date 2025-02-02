@@ -27,6 +27,8 @@ export const initialClipsState: ClipsState = clipsAdapter.getInitialState({
 const reducer = createReducer(
   initialClipsState,
 
+  on(ClipsActions.setTransferedState, (state, { items }) => clipsAdapter.setAll(items, { ...state, activeItemIdx: 0 })),
+
   on(
     ClipsActions.loadInitialClip,
     ClipsActions.loadNextPage,
