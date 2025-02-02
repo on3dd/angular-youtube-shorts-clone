@@ -7,6 +7,7 @@ import {
   inject,
   Injector,
   input,
+  isDevMode,
   viewChild,
 } from '@angular/core';
 import {
@@ -44,8 +45,6 @@ export class ClipVideoComponent {
     afterNextRender(() => {
       effect(
         () => {
-          // console.log(`${this.data().name}, active: ${this.active()}`);
-
           if (this.active()) {
             this.mediaWrapperRef().play();
           } else {
@@ -59,10 +58,10 @@ export class ClipVideoComponent {
   }
 
   onInitFinished() {
-    // console.log(`onInitFinished: name: ${this.data().name}, active: ${this.active()}`);
+    const mediaWrapper = this.mediaWrapperRef();
 
-    if (this.active()) {
-      this.mediaWrapperRef().play();
-    }
+    // TODO: check for env var instead?
+    if (isDevMode()) mediaWrapper.mute();
+    if (this.active()) mediaWrapper.play();
   }
 }

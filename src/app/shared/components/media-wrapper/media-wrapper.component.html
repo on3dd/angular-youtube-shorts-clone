@@ -4,17 +4,20 @@
   @let srcs = sources();
 
   @if (srcs.hlsUrl) {
-    <hls-video [src]="srcs.hlsUrl" slot="media" crossorigin loop [muted]="isVideoMutedByDefault"></hls-video>
+    <hls-video [src]="srcs.hlsUrl" slot="media" crossorigin loop></hls-video>
   } @else if (srcs.dashUrl) {
-    <dash-video [src]="srcs.dashUrl" slot="media" crossorigin loop [muted]="isVideoMutedByDefault"></dash-video>
+    <dash-video [src]="srcs.dashUrl" slot="media" crossorigin loop></dash-video>
   } @else {
-    <video
-      [src]="srcs.fallbackUrl"
-      slot="media"
-      preload="metadata"
-      crossorigin
-      loop
-      [muted]="isVideoMutedByDefault"
-    ></video>
+    <video [src]="srcs.fallbackUrl" slot="media" preload="metadata" crossorigin loop></video>
   }
+
+  <!-- TODO: style mute button -->
+  <media-control-bar slot="top-chrome">
+    <media-mute-button></media-mute-button>
+  </media-control-bar>
+
+  <!-- TODO: Enable and style it -->
+  <!-- <media-control-bar>
+    <media-time-range></media-time-range>
+  </media-control-bar> -->
 </media-controller>
