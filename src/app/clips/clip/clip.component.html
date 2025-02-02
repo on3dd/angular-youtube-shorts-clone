@@ -3,18 +3,17 @@
   <!-- Clip content -->
   <div class="aspect-shorts relative flex h-full max-w-full overflow-hidden rounded-xl md:rounded-2xl lg:rounded-3xl">
     <!-- Clip video -->
-    <div class="w-full bg-black">
-      <app-clip-video [data]="data()" [active]="active()" />
-    </div>
+    <app-clip-video class="w-full bg-black" [data]="data()" [active]="active()" />
 
     <!-- Clip overlay -->
-    <div class="absolute bottom-0 mt-auto p-3 w-full bg-clip-overlay">
-      <app-clip-overlay [data]="data()" />
-    </div>
+    <app-clip-overlay class="absolute bottom-0 mt-auto p-3 w-full bg-clip-overlay" [data]="data()" />
   </div>
 
   <!-- Clip actions -->
-  <div class="absolute top-1/2 right-2 sm:right-0 sm:left-[calc(100%+theme(spacing.3))] -translate-y-1/2">
-    <app-clip-actions [data]="data()" (prevItem)="prevItem.emit($event)" (nextItem)="nextItem.emit($event)" />
-  </div>
+  <app-clip-actions
+    class="absolute top-1/2 right-0 sm:left-[calc(100%+theme(spacing.3))] -translate-y-1/2 p-2 sm:p-0"
+    [data]="data()"
+    (prevItem)="prevItem.emit($event)"
+    (nextItem)="nextItem.emit($event)"
+  />
 </div>
