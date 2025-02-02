@@ -7,9 +7,26 @@ export const PAGE_SIZE = 10;
 
 const BASE_URL = 'https://www.reddit.com/r/TikTokCringe/hot.json';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ClipsApiService {
   private readonly http = inject(HttpClient);
+
+  getInitialPost(_name?: RedditPostData['name']): Observable<RedditPostObj> {
+    // TODO: impl method to fetch post by ID (most likely via OAuth API)
+    return this.getFirstPost();
+  }
+
+  getFirstPost(): Observable<RedditPostObj> {
+    return (
+      this.http
+        .get<RedditListingObj<RedditPostObj>>(BASE_URL, {
+          params: { limit: 1 },
+          responseType: 'json',
+        })
+        // Get last post in the list because Reddit API can put subreddit's pinned posts in front of the actual response
+        .pipe(map((response) => response.data.children.at(-1)!))
+    );
+  }
 
   getPosts(after?: RedditPostData['name'] | null): Observable<RedditPostObj[]> {
     const params = this.buildHttpParams({ after, limit: PAGE_SIZE });
@@ -23,7 +40,7 @@ export class ClipsApiService {
     return Object.entries(params).reduce((acc, [key, value]) => (value ? acc.set(key, value) : acc), new HttpParams());
   }
 
-  private filterPostsWithMedia(posts: RedditPostObj[]) {
+  private filterPostsWithMedia(posts: RedditPostObj[]): RedditPostObj[] {
     return (
       posts
         // Handle cases when post itself doesn't have a video, but has crossposts.

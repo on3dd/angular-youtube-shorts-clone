@@ -1,14 +1,16 @@
 import { Route } from '@angular/router';
 
-import { ClipsComponent } from './clips/clips.component';
+import { CLIPS_PROVIDERS } from './clips/clips.providers';
 
 export const appRoutes: Route[] = [
   {
     path: '',
-    component: ClipsComponent,
+    pathMatch: 'full',
+    redirectTo: 'clips',
   },
   {
-    path: ':id',
-    component: ClipsComponent,
+    path: 'clips',
+    providers: [CLIPS_PROVIDERS],
+    loadChildren: () => import('./clips/clips.routes').then((r) => r.routes),
   },
 ];

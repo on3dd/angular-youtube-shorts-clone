@@ -1,6 +1,6 @@
 @if (vm(); as vm) {
   <div class="flex flex-col">
-    @for (item of vm.clipsList; track item.data.id; let idx = $index) {
+    @for (item of vm.clips; track item.data.id; let idx = $index) {
       <app-clip
         [data]="item.data"
         [active]="idx === vm.activeItemIdx"

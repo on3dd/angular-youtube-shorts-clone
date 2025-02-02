@@ -9,10 +9,9 @@ import {
   Injector,
   viewChildren,
 } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ClipComponent } from './clip/clip.component';
-import { ClipsFacade } from './services/clips.facade';
+import { ClipsFacade } from './state/clips.facade';
 
 @Component({
   selector: 'app-clips',
@@ -24,7 +23,6 @@ import { ClipsFacade } from './services/clips.facade';
 })
 export class ClipsComponent {
   private readonly injector = inject(Injector);
-  private readonly router = inject(Router);
   private readonly clipsFacade = inject(ClipsFacade);
 
   private readonly clipsRefs = viewChildren<ClipComponent, ElementRef<HTMLElement>>(ClipComponent, {
@@ -32,30 +30,24 @@ export class ClipsComponent {
   });
 
   protected readonly vm = computed(() => ({
-    clipsList: this.clipsFacade.clipsList(),
+    clips: this.clipsFacade.clips(),
     activeItem: this.clipsFacade.activeItem(),
     activeItemIdx: this.clipsFacade.activeItemIdx(),
   }));
 
   constructor() {
-    effect(() => {
-      const activeItem = this.clipsFacade.activeItem();
-
-      // TODO: looks like initial redirection breaks autoplay of the first element?
-      if (activeItem) {
-        this.router.navigate(['/', activeItem.data.name]);
-      }
-    });
+    effect(() => console.log('vm', this.vm()));
 
     afterNextRender(() => {
       effect(
         () => {
           const idx = this.clipsFacade.activeItemIdx();
 
-          this.clipsRefs()[idx]?.nativeElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          });
+          if (typeof idx === 'number') {
+            const clipRef = this.clipsRefs()[idx];
+
+            clipRef?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         },
         { injector: this.injector },
       );
