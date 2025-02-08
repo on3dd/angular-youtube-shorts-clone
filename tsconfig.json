@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "files": [],
-  "include": ["eslint.config.js", "tailwind.config.js"],
+  "include": ["eslint.config.js", "tailwind.config.js", "postcss.config.js"],
   "references": [
     {
       "path": "./tsconfig.editor.json"

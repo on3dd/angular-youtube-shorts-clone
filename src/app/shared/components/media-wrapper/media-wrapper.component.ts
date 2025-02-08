@@ -9,6 +9,15 @@ import {
   output,
   viewChild,
 } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import {
+  matPause,
+  matPlayArrow,
+  matVolumeDown,
+  matVolumeMute,
+  matVolumeOff,
+  matVolumeUp,
+} from '@ng-icons/material-icons/baseline';
 import { MediaController } from 'media-chrome';
 import { MediaUIAttributes, MediaUIEvents } from 'media-chrome/dist/constants';
 
@@ -21,9 +30,12 @@ export type MediaWrapperSources = {
 @Component({
   selector: 'app-media-wrapper',
   templateUrl: './media-wrapper.component.html',
+  styleUrl: './media-wrapper.component.css',
   host: { class: 'block h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [NgIcon],
+  providers: [provideIcons({ matVolumeOff, matVolumeMute, matVolumeDown, matVolumeUp, matPlayArrow, matPause })],
 })
 export class MediaWrapperComponent {
   readonly sources = input.required<MediaWrapperSources>();

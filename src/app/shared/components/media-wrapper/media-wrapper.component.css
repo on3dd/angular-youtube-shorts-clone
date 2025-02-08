@@ -1,0 +1,58 @@
+@tailwind components;
+
+@layer components {
+  media-controller [slot="top-chrome"] {
+    @apply p-3;
+
+    --media-tooltip-display: none;
+    --media-button-icon-transition: none;
+    --media-font-size: 16px;
+    --media-primary-color: theme('colors.zinc.50');
+    --media-control-display: flex;
+    --media-control-padding: 0;
+    --media-control-background: theme('colors.zinc.800/50%');
+    --media-control-hover-background: theme('colors.zinc.700/50%');
+  }
+  
+  media-play-button,
+  media-mute-button {
+    @apply h-12 w-12 rounded-full;
+    
+    transition: none;
+  }
+
+  media-play-button {
+    @apply mr-2;
+  }
+  
+  media-volume-range {
+    @apply w-0 h-12 rounded-r-full opacity-0;
+
+    --media-control-padding: theme('padding.4');
+  }
+
+  .volume-controls-container {
+    display: flex;
+  }
+
+  .volume-controls-container:hover,
+  .volume-controls-container:active {
+    --media-control-background: theme('colors.zinc.700/50%');
+
+    media-mute-button {
+      @apply rounded-r-none;
+    }
+
+    media-volume-range {
+      @apply w-[100px] opacity-100;
+    }
+  }
+
+  media-time-range {
+    height: 4px;
+    z-index: 100;
+
+    --media-range-padding: 0;
+    --media-primary-color: theme('colors.red.600');
+  }
+}

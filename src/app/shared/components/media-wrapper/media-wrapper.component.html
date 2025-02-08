@@ -1,5 +1,4 @@
 <!-- TODO: disable preloading (for hls and dash additional configuration is required) -->
-<!-- TODO: add "play" and "mute" buttons -->
 <media-controller #controller nohotkeys class="block h-full">
   @let srcs = sources();
 
@@ -11,13 +10,27 @@
     <video [src]="srcs.fallbackUrl" slot="media" preload="metadata" crossorigin loop></video>
   }
 
-  <!-- TODO: style mute button -->
   <media-control-bar slot="top-chrome">
-    <media-mute-button></media-mute-button>
+    <media-play-button>
+      <ng-icon slot="play" name="matPlayArrow" size="1.25rem" />
+      <ng-icon slot="pause" name="matPause" size="1.25rem" />
+    </media-play-button>
+
+    <div class="volume-controls-container" tabindex="0">
+      <media-mute-button>
+        <ng-icon slot="off" name="matVolumeOff" size="1.25rem" />
+        <ng-icon slot="low" name="matVolumeMute" size="1.25rem" />
+        <ng-icon slot="medium" name="matVolumeDown" size="1.25rem" />
+        <ng-icon slot="high" name="matVolumeUp" size="1.25rem" />
+      </media-mute-button>
+
+      <media-volume-range></media-volume-range>
+    </div>
   </media-control-bar>
 
-  <!-- TODO: Enable and style it -->
-  <!-- <media-control-bar>
-    <media-time-range></media-time-range>
-  </media-control-bar> -->
+  <media-control-bar>
+    <media-time-range>
+      <span slot="preview"></span>
+    </media-time-range>
+  </media-control-bar>
 </media-controller>
