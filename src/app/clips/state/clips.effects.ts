@@ -1,6 +1,6 @@
 import { isPlatformServer } from '@angular/common';
 import { inject, Injectable, makeStateKey, PLATFORM_ID, TransferState } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { select, Store } from '@ngrx/store';
@@ -11,6 +11,7 @@ import * as ClipsActions from './clips.actions';
 import { ClipsEntity } from './clips.models';
 import * as fromClips from './clips.reducer';
 import * as ClipsSelectors from './clips.selectors';
+import { selecClipsCount } from './clips.selectors';
 
 const CLIPS_STATE_KEY = makeStateKey<ClipsEntity[]>('TRANSFERED_STATE');
 
@@ -25,10 +26,21 @@ export class ClipsEffects {
   private readonly route = inject(ActivatedRoute);
   private readonly clipsApiService = inject(ClipsApiService);
 
-  private readonly initialName$ = this.route.params.pipe(
+  private readonly initialId$ = this.router.events.pipe(
+    filter((event) => event instanceof NavigationEnd),
     first(),
-    map((params) => params['full_name']),
-    tap((initialName) => console.log('initialName', initialName)),
+    map(() => {
+      let route = this.route;
+
+      while (route.firstChild) {
+        route = route.firstChild;
+      }
+
+      return route;
+    }),
+    map((route) => route.snapshot.params),
+    map((params) => params['id']),
+    tap((id) => console.log('id', id)),
   );
 
   private readonly lastPageLoaded$ = this.store.pipe(
@@ -40,7 +52,7 @@ export class ClipsEffects {
   );
 
   readonly loadInitialPost$ = createEffect(() => {
-    return this.initialName$.pipe(
+    return this.initialId$.pipe(
       switchMap((name) => {
         const transferedItems = this.transferState.get(CLIPS_STATE_KEY, []);
 
@@ -68,8 +80,9 @@ export class ClipsEffects {
   readonly loadNextPage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ClipsActions.loadNextPage),
-      exhaustMap(({ after }) =>
-        this.clipsApiService.getPosts(after).pipe(
+      concatLatestFrom(() => this.store.select(selecClipsCount)),
+      exhaustMap(([{ after }, count]) =>
+        this.clipsApiService.getPosts(after, count).pipe(
           mapResponse({
             next: (items) => ClipsActions.loadNextPageSuccess({ items }),
             error: (error) => ClipsActions.loadNextPageFailure({ error }),
@@ -120,7 +133,7 @@ export class ClipsEffects {
     () => {
       return this.store.pipe(select(ClipsSelectors.selectActiveItem)).pipe(
         filter(Boolean),
-        tap((activeItem) => this.router.navigate(['/clips', activeItem.data.name])),
+        tap((activeItem) => this.router.navigate(['/clips', activeItem.data.id])),
       );
     },
     { dispatch: false },

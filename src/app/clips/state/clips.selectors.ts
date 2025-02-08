@@ -15,3 +15,5 @@ export const selectActiveItemIdx = createSelector(selectClipsState, (state: Clip
 export const selectActiveItem = createSelector(selectAllClips, selectActiveItemIdx, (clips, activeItemIdx) =>
   activeItemIdx === null ? null : clips[activeItemIdx],
 );
+
+export const selecClipsCount = createSelector(selectAllClips, (clips) => clips.length ?? 0);

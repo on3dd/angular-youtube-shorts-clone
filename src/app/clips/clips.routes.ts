@@ -8,7 +8,7 @@ export const routes: Route[] = [
     component: ClipsComponent,
   },
   {
-    path: ':full_name',
+    path: ':id',
     component: ClipsComponent,
   },
 ];

@@ -5,21 +5,20 @@ import { RedditListingObj, RedditPostData, RedditPostObj } from 'src/app/shared/
 
 export const PAGE_SIZE = 10;
 
-const BASE_URL = 'https://www.reddit.com/r/TikTokCringe/hot.json';
+const BASE_URL = 'https://www.reddit.com/r/TikTokCringe';
 
 @Injectable()
 export class ClipsApiService {
   private readonly http = inject(HttpClient);
 
-  getInitialPost(_name?: RedditPostData['name']): Observable<RedditPostObj> {
-    // TODO: impl method to fetch post by ID (most likely via OAuth API)
-    return this.getFirstPost();
+  getInitialPost(name?: RedditPostData['name']): Observable<RedditPostObj> {
+    return name ? this.getPostById(name) : this.getFirstPost();
   }
 
   getFirstPost(): Observable<RedditPostObj> {
     return (
       this.http
-        .get<RedditListingObj<RedditPostObj>>(BASE_URL, {
+        .get<RedditListingObj<RedditPostObj>>(`${BASE_URL}/hot.json`, {
           params: { limit: 1 },
           responseType: 'json',
         })
@@ -28,11 +27,19 @@ export class ClipsApiService {
     );
   }
 
-  getPosts(after?: RedditPostData['name'] | null): Observable<RedditPostObj[]> {
-    const params = this.buildHttpParams({ after, limit: PAGE_SIZE });
+  getPostById(id: RedditPostData['id']): Observable<RedditPostObj> {
+    return this.http
+      .get<
+        RedditListingObj<RedditPostObj>[]
+      >(`${BASE_URL}/comments/${id}.json`, { params: { limit: 1 }, responseType: 'json' })
+      .pipe(map((response) => response[0].data.children[0]));
+  }
+
+  getPosts(after?: RedditPostData['name'] | null, count?: number): Observable<RedditPostObj[]> {
+    const params = this.buildHttpParams({ after, count, limit: PAGE_SIZE });
 
     return this.http
-      .get<RedditListingObj<RedditPostObj>>(BASE_URL, { params, responseType: 'json' })
+      .get<RedditListingObj<RedditPostObj>>(`${BASE_URL}/hot.json`, { params, responseType: 'json' })
       .pipe(map((response) => this.filterPostsWithMedia(response.data.children)));
   }
 
