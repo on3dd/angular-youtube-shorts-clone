@@ -21,6 +21,8 @@ import { MediaController } from 'media-chrome';
 import { MediaUIEvents } from 'media-chrome/dist/constants';
 import { EventOrAction } from 'media-chrome/dist/media-store/state-mediator';
 
+import { MediaWrapperVideoDirective } from './media-wrapper-video.directive';
+
 export type MediaWrapperSources = {
   hlsUrl?: string;
   dashUrl?: string;
@@ -34,7 +36,7 @@ export type MediaWrapperSources = {
   host: { class: 'block h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [NgIcon],
+  imports: [NgIcon, MediaWrapperVideoDirective],
   providers: [provideIcons({ matVolumeOff, matVolumeMute, matVolumeDown, matVolumeUp, matPlayArrow, matPause })],
 })
 export class MediaWrapperComponent {

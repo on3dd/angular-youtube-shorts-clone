@@ -4,11 +4,11 @@
 
   @if (srcs.hlsUrl) {
     <!-- TODO: create directive to set common attributes via host bindings -->
-    <hls-video [src]="srcs.hlsUrl" slot="media" preload="none" crossorigin loop></hls-video>
+    <hls-video [appMediaWrapperVideo]="srcs.hlsUrl"></hls-video>
   } @else if (srcs.dashUrl) {
-    <dash-video [src]="srcs.dashUrl" slot="media" preload="none" crossorigin loop></dash-video>
+    <dash-video [appMediaWrapperVideo]="srcs.dashUrl"></dash-video>
   } @else {
-    <video [src]="srcs.fallbackUrl" slot="media" preload="none" crossorigin loop></video>
+    <video [appMediaWrapperVideo]="srcs.fallbackUrl"></video>
   }
 
   <media-control-bar slot="top-chrome">
