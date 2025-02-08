@@ -3,13 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   Injector,
   input,
-  isDevMode,
   viewChild,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, pairwise, startWith } from 'rxjs';
 import {
   MediaWrapperComponent,
   MediaWrapperSources,
@@ -43,25 +43,20 @@ export class ClipVideoComponent {
 
   constructor() {
     afterNextRender(() => {
-      effect(
-        () => {
-          if (this.active()) {
+      // Automatically play or stop video playback on active change.
+      toObservable(this.active, { injector: this.injector })
+        .pipe(
+          startWith(false),
+          pairwise(),
+          filter(([prev, curr]) => prev !== curr),
+        )
+        .subscribe(([, curr]) => {
+          if (curr) {
             this.mediaWrapperRef().play();
           } else {
-            // TODO: Only trigger this method when clip is running
             this.mediaWrapperRef().stop();
           }
-        },
-        { injector: this.injector },
-      );
+        });
     });
-  }
-
-  onInitFinished() {
-    const mediaWrapper = this.mediaWrapperRef();
-
-    // TODO: check for env var instead?
-    if (isDevMode()) mediaWrapper.mute();
-    if (this.active()) mediaWrapper.play();
   }
 }

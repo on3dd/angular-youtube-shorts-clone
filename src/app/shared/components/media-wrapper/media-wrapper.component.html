@@ -1,13 +1,14 @@
-<!-- TODO: disable preloading (for hls and dash additional configuration is required) -->
+<!-- TODO: disable preloading for dash-video (not yet implemented in media-elements) -->
 <media-controller #controller nohotkeys class="block h-full">
   @let srcs = sources();
 
   @if (srcs.hlsUrl) {
-    <hls-video [src]="srcs.hlsUrl" slot="media" crossorigin loop></hls-video>
+    <!-- TODO: create directive to set common attributes via host bindings -->
+    <hls-video [src]="srcs.hlsUrl" slot="media" preload="none" crossorigin loop></hls-video>
   } @else if (srcs.dashUrl) {
-    <dash-video [src]="srcs.dashUrl" slot="media" crossorigin loop></dash-video>
+    <dash-video [src]="srcs.dashUrl" slot="media" preload="none" crossorigin loop></dash-video>
   } @else {
-    <video [src]="srcs.fallbackUrl" slot="media" preload="metadata" crossorigin loop></video>
+    <video [src]="srcs.fallbackUrl" slot="media" preload="none" crossorigin loop></video>
   }
 
   <media-control-bar slot="top-chrome">

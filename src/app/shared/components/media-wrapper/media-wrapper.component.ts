@@ -1,5 +1,4 @@
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -19,7 +18,8 @@ import {
   matVolumeUp,
 } from '@ng-icons/material-icons/baseline';
 import { MediaController } from 'media-chrome';
-import { MediaUIAttributes, MediaUIEvents } from 'media-chrome/dist/constants';
+import { MediaUIEvents } from 'media-chrome/dist/constants';
+import { EventOrAction } from 'media-chrome/dist/media-store/state-mediator';
 
 export type MediaWrapperSources = {
   hlsUrl?: string;
@@ -39,38 +39,28 @@ export type MediaWrapperSources = {
 })
 export class MediaWrapperComponent {
   readonly sources = input.required<MediaWrapperSources>();
+  readonly autoplay = input<boolean>(false);
 
-  readonly initFinished = output();
+  readonly initFinished = output<void>();
 
   private readonly mediaControllerRef = viewChild.required<ElementRef<MediaController>>('controller');
 
   private readonly mediaControllerEl = computed(() => this.mediaControllerRef().nativeElement);
 
-  constructor() {
-    // Manually start video playback when the `MEDIA_BUFFERED` event fires for the first time when `autoplay` is `true`.
-    afterNextRender(() => {
-      this.mediaControllerEl().addEventListener(
-        MediaUIAttributes.MEDIA_SEEKABLE,
-        () => {
-          this.initFinished.emit();
-        },
-        { once: true },
-      );
-    });
-  }
-
   play() {
-    console.log('play');
-    this.mediaControllerEl().mediaStore.dispatch({ type: MediaUIEvents.MEDIA_SEEK_REQUEST, detail: 0 });
-    this.mediaControllerEl().mediaStore.dispatch({ type: MediaUIEvents.MEDIA_PLAY_REQUEST });
+    this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_PLAY_REQUEST });
   }
 
   stop() {
-    console.log('stop');
-    this.mediaControllerEl().mediaStore.dispatch({ type: MediaUIEvents.MEDIA_PAUSE_REQUEST });
+    this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_PAUSE_REQUEST });
+    this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_SEEK_REQUEST, detail: 0 });
   }
 
   mute() {
-    this.mediaControllerEl().mediaStore.dispatch({ type: MediaUIEvents.MEDIA_MUTE_REQUEST });
+    this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_MUTE_REQUEST });
+  }
+
+  private dispatchToMediaStore(event: EventOrAction<unknown>) {
+    this.mediaControllerEl().mediaStore.dispatch(event);
   }
 }
