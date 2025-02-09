@@ -1,0 +1,21 @@
+@if (vm(); as vm) {
+  <div
+    class="flex flex-nowrap items-center gap-3 py-2 px-3 cursor-pointer rounded-lg shadow-md hover:shadow-lg transition border-l-4 opacity-95 hover:opacity-100 bg-zinc-50 dark:bg-zinc-800"
+    [ngClass]="vm.color.border"
+    tabindex="0"
+    (click)="toastDismissed.emit()"
+    (keydown)="toastDismissed.emit()"
+  >
+    <div class="flex" [ngClass]="vm.color.icon">
+      <ng-icon [name]="vm.icon" size="1.5em" />
+    </div>
+
+    <div class="text-zinc-800 dark:text-zinc-50">
+      @if (vm.toast.title) {
+        <div class="text-sm font-bold">{{ vm.toast.title }}</div>
+      }
+
+      <div class="text-xs font-medium">{{ vm.toast.message }}</div>
+    </div>
+  </div>
+}

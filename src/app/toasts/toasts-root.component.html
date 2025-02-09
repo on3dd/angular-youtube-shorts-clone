@@ -1,19 +1,5 @@
 <div class="flex flex-col gap-2 w-[90vw] sm:w-full sm:max-w-[250px] md:max-w-[350px]">
   @for (toast of toasts(); track $index; let idx = $index) {
-    @let color = statusColorVariants[toast.type];
-
-    <div
-      class="flex flex-nowrap items-center gap-3 py-2 px-3 cursor-pointer rounded-lg shadow-md hover:shadow-lg transition border-l-4 opacity-95 hover:opacity-100 text-zinc-800 dark:text-zinc-50 bg-zinc-50 dark:bg-zinc-800"
-      [ngClass]="color.border"
-    >
-      <div class="flex" [ngClass]="color.text">
-        <ng-icon [name]="toast.icon" size="1.5em" />
-      </div>
-
-      <div>
-        <div class="text-sm font-bold">{{ toast.title }}</div>
-        <div class="text-xs font-medium">{{ toast.message }}</div>
-      </div>
-    </div>
+    <app-toast [toast]="toast" (toastDismissed)="dismissToast(toast)" />
   }
 </div>

@@ -5,6 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, exhaustMap, filter, first, map, of, scan, switchMap, takeWhile, tap } from 'rxjs';
+import { ToastsFacade } from 'src/app/toasts/state/toasts.facade';
 
 import { ClipsApiService, PAGE_SIZE } from '../services/clips-api.service';
 import * as ClipsActions from './clips.actions';
@@ -25,6 +26,7 @@ export class ClipsEffects {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly clipsApiService = inject(ClipsApiService);
+  private readonly toastsFacade = inject(ToastsFacade);
 
   private readonly initialId$ = this.router.events.pipe(
     filter((event) => event instanceof NavigationEnd),
@@ -40,7 +42,6 @@ export class ClipsEffects {
     }),
     map((route) => route.snapshot.params),
     map((params) => params['id']),
-    tap((id) => console.log('id', id)),
   );
 
   private readonly lastPageLoaded$ = this.store.pipe(
@@ -95,7 +96,6 @@ export class ClipsEffects {
   readonly loadNextPageByLimit$ = createEffect(() => {
     return this.lastPageLoaded$.pipe(
       filter(Boolean),
-      tap((lastPageLoaded) => console.log('lastPageLoaded', lastPageLoaded)),
       concatLatestFrom(() => this.store.select(ClipsSelectors.selectActiveItem)),
       switchMap(([_pageNumber, activeItem]) =>
         this.clipsApiService.getPosts(activeItem?.data.name).pipe(
@@ -118,12 +118,20 @@ export class ClipsEffects {
     { dispatch: false },
   );
 
-  // TODO: Add proper error handling
   readonly handleError$ = createEffect(
     () => {
       return this.actions$.pipe(
         ofType(ClipsActions.loadInitialClipFailure, ClipsActions.loadNextPageFailure),
-        tap((action) => console.log('error occured', action)),
+        tap(({ error }) => {
+          console.error(error);
+
+          const message =
+            error instanceof Error
+              ? error.message
+              : 'Something went wrong while loading the data. Please try again later.';
+
+          this.toastsFacade.showToast({ message, type: 'error', autoDismissTime: null });
+        }),
       );
     },
     { dispatch: false },
