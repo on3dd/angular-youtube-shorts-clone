@@ -5,7 +5,6 @@
     @apply p-3;
 
     --media-tooltip-display: none;
-    --media-button-icon-transition: none;
     --media-font-size: 16px;
     --media-primary-color: theme('colors.zinc.50');
     --media-control-display: flex;
@@ -13,12 +12,20 @@
     --media-control-background: theme('colors.zinc.800/50%');
     --media-control-hover-background: theme('colors.zinc.700/50%');
   }
-  
+
+  media-control-bar {
+    @apply transition-opacity;
+  }
+
+  media-play-button,
+  media-mute-button,
+  media-volume-range {
+    @apply transition-all;
+  }
+
   media-play-button,
   media-mute-button {
     @apply h-12 w-12 rounded-full;
-    
-    transition: none;
   }
 
   media-play-button {
