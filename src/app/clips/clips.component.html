@@ -1,5 +1,8 @@
 @if (vm(); as vm) {
-  <div class="flex flex-col mx-auto max-w-full sm:max-w-[calc(100%-theme(width.12)-theme(spacing.3))]">
+  <div
+    class="ml-[50%] mr-[50%] max-w-full sm:max-w-[calc(100%-theme(width.12)-theme(spacing.3))]"
+    style="transform: translateX(-50%) translateX(-1.5rem)"
+  >
     @for (item of vm.clips; track item.data.id; let idx = $index) {
       <app-clip
         [data]="item.data"
