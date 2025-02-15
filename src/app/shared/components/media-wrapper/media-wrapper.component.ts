@@ -55,11 +55,14 @@ export class MediaWrapperComponent {
 
   stop() {
     this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_PAUSE_REQUEST });
-    this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_SEEK_REQUEST, detail: 0 });
   }
 
   mute() {
     this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_MUTE_REQUEST });
+  }
+
+  reset() {
+    this.dispatchToMediaStore({ type: MediaUIEvents.MEDIA_SEEK_REQUEST, detail: 0 });
   }
 
   private dispatchToMediaStore(event: EventOrAction<unknown>) {

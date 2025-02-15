@@ -51,10 +51,12 @@ export class ClipVideoComponent {
           filter(([prev, curr]) => prev !== curr),
         )
         .subscribe(([, curr]) => {
+          const mediaWrapper = this.mediaWrapperRef();
           if (curr) {
-            this.mediaWrapperRef().play();
+            mediaWrapper.reset();
+            mediaWrapper.play();
           } else {
-            this.mediaWrapperRef().stop();
+            mediaWrapper.stop();
           }
         });
     });
