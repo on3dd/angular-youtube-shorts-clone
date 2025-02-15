@@ -1,0 +1,11 @@
+@tailwind components;
+
+
+@layer components {
+  .clips-container {
+    @media screen(sm) {
+      transform: translateX(-50%) translateX(-1.5rem);
+    }
+  }
+
+}

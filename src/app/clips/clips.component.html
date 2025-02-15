@@ -1,7 +1,6 @@
 @if (vm(); as vm) {
   <div
-    class="ml-[50%] mr-[50%] max-w-full sm:max-w-[calc(100%-theme(width.12)-theme(spacing.3))]"
-    style="transform: translateX(-50%) translateX(-1.5rem)"
+    class="clips-container mx-auto sm:ml-[50%] sm:mr-[50%] max-w-full sm:max-w-[calc(100%-theme(width.12)-theme(spacing.3))]"
   >
     @for (item of vm.clips; track item.data.id; let idx = $index) {
       <app-clip
