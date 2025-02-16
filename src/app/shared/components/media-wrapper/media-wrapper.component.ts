@@ -18,8 +18,11 @@ import {
   matVolumeUp,
 } from '@ng-icons/material-icons/baseline';
 import { MediaController } from 'media-chrome';
-import { MediaUIEvents } from 'media-chrome/dist/constants';
-import { EventOrAction } from 'media-chrome/dist/media-store/state-mediator';
+// ts-ignore's below are media-chrome issue, see https://github.com/muxinc/media-chrome/issues/680
+// @ts-ignore
+import { MediaUIEvents } from 'media-chrome/constants';
+// @ts-ignore
+import { EventOrAction } from 'media-chrome/media-store/state-mediator';
 
 import { MediaWrapperVideoDirective } from './media-wrapper-video.directive';
 
