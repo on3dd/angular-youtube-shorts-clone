@@ -24,3 +24,10 @@ export const loadNextPageFailure = createAction('[Clips/API] Load Next Page Fail
 // Show next/prev item
 export const showNextItem = createAction('[Clips Page] Show Next Item');
 export const showPrevItem = createAction('[Clips Page] Show Prev Item');
+
+// Not implemented yet
+export const likeItem = createAction('[Clips Page] Like Item');
+export const dislikeItem = createAction('[Clips Page] Dislike Item');
+export const commentItem = createAction('[Clips Page] Comment Item');
+export const shareItem = createAction('[Clips Page] Share Item');
+export const showMoreItem = createAction('[Clips Page] Show More Item');

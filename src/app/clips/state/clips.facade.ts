@@ -24,4 +24,24 @@ export class ClipsFacade {
   nextItem() {
     this.store.dispatch(ClipsActions.showNextItem());
   }
+
+  likeItem() {
+    this.store.dispatch(ClipsActions.likeItem());
+  }
+
+  dislikeItem() {
+    this.store.dispatch(ClipsActions.dislikeItem());
+  }
+
+  commentItem() {
+    this.store.dispatch(ClipsActions.commentItem());
+  }
+
+  shareItem() {
+    this.store.dispatch(ClipsActions.shareItem());
+  }
+
+  showMoreItem() {
+    this.store.dispatch(ClipsActions.showMoreItem());
+  }
 }

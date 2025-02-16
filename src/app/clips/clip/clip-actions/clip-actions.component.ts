@@ -38,17 +38,56 @@ export class ClipActionsComponent {
   readonly prevItem = output<RedditPostData>();
   readonly nextItem = output<RedditPostData>();
 
+  readonly likeItem = output<RedditPostData>();
+  readonly dislikeItem = output<RedditPostData>();
+  readonly commentItem = output<RedditPostData>();
+  readonly shareItem = output<RedditPostData>();
+  readonly showMoreItem = output<RedditPostData>();
+
   readonly actions = computed<MenuAction[]>(() => {
     const data = this.data();
+
     return [
-      { name: 'Like', icon: 'matThumbUp', label: data.ups, active: true },
-      { name: 'Dislike', icon: 'matThumbDown', label: 'Dislike' },
-      { name: 'Comment', icon: 'matComment', label: data.num_comments },
-      { name: 'Share', icon: 'matShare', label: 'Share' },
-      { name: 'More', icon: 'matMoreVert' },
-      // TODO: Show only on md and above
-      { name: 'Previous', icon: 'matArrowUpward', onClick: () => this.prevItem.emit(this.data()) },
-      { name: 'Next', icon: 'matArrowDownward', onClick: () => this.nextItem.emit(this.data()) },
+      {
+        name: 'Like',
+        icon: 'matThumbUp',
+        label: data.ups,
+        active: true,
+        onClick: () => this.likeItem.emit(data),
+      },
+      {
+        name: 'Dislike',
+        icon: 'matThumbDown',
+        label: 'Dislike',
+        onClick: () => this.dislikeItem.emit(data),
+      },
+      {
+        name: 'Comment',
+        icon: 'matComment',
+        label: data.num_comments,
+        onClick: () => this.commentItem.emit(data),
+      },
+      {
+        name: 'Share',
+        icon: 'matShare',
+        label: 'Share',
+        onClick: () => this.shareItem.emit(data),
+      },
+      {
+        name: 'More',
+        icon: 'matMoreVert',
+        onClick: () => this.showMoreItem.emit(data),
+      },
+      {
+        name: 'Previous',
+        icon: 'matArrowUpward',
+        onClick: () => this.prevItem.emit(data),
+      },
+      {
+        name: 'Next',
+        icon: 'matArrowDownward',
+        onClick: () => this.nextItem.emit(data),
+      },
     ];
   });
 }

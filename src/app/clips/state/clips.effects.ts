@@ -146,4 +146,20 @@ export class ClipsEffects {
     },
     { dispatch: false },
   );
+
+  readonly showNotImplementedToast$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(
+          ClipsActions.likeItem,
+          ClipsActions.dislikeItem,
+          ClipsActions.commentItem,
+          ClipsActions.shareItem,
+          ClipsActions.showMoreItem,
+        ),
+        tap(() => this.toastsFacade.showToast({ type: 'info', message: 'Sorry, but this is not implemented yet!' })),
+      );
+    },
+    { dispatch: false },
+  );
 }

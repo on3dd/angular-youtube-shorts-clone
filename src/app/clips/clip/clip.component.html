@@ -17,5 +17,10 @@
     [data]="data()"
     (prevItem)="prevItem.emit($event)"
     (nextItem)="nextItem.emit($event)"
+    (likeItem)="likeItem.emit($event)"
+    (dislikeItem)="dislikeItem.emit($event)"
+    (commentItem)="commentItem.emit($event)"
+    (shareItem)="shareItem.emit($event)"
+    (showMoreItem)="showMoreItem.emit($event)"
   />
 </div>

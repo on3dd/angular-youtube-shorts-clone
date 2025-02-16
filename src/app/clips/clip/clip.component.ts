@@ -19,4 +19,10 @@ export class ClipComponent {
 
   readonly prevItem = output<RedditPostData>();
   readonly nextItem = output<RedditPostData>();
+
+  readonly likeItem = output<RedditPostData>();
+  readonly dislikeItem = output<RedditPostData>();
+  readonly commentItem = output<RedditPostData>();
+  readonly shareItem = output<RedditPostData>();
+  readonly showMoreItem = output<RedditPostData>();
 }

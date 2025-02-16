@@ -74,4 +74,24 @@ export class ClipsComponent {
   nextItem() {
     this.clipsFacade.nextItem();
   }
+
+  likeItem() {
+    this.clipsFacade.likeItem();
+  }
+
+  dislikeItem() {
+    this.clipsFacade.dislikeItem();
+  }
+
+  commentItem() {
+    this.clipsFacade.commentItem();
+  }
+
+  shareItem() {
+    this.clipsFacade.shareItem();
+  }
+
+  showMoreItem() {
+    this.clipsFacade.showMoreItem();
+  }
 }
