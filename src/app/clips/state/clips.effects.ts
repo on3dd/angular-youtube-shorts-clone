@@ -5,6 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, exhaustMap, filter, first, map, of, scan, switchMap, takeWhile, tap } from 'rxjs';
+import { getGenericErrorMessage } from 'src/app/shared/utils/error.utils';
 import { ToastsFacade } from 'src/app/toasts/state/toasts.facade';
 
 import { ClipsApiService, PAGE_SIZE } from '../services/clips-api.service';
@@ -122,16 +123,16 @@ export class ClipsEffects {
     () => {
       return this.actions$.pipe(
         ofType(ClipsActions.loadInitialClipFailure, ClipsActions.loadNextPageFailure),
-        tap(({ error }) => {
-          console.error(error);
-
-          const message =
-            error instanceof Error
-              ? error.message
-              : 'Something went wrong while loading the data. Please try again later.';
-
-          this.toastsFacade.showToast({ message, type: 'error', autoDismissTime: null });
-        }),
+        tap(({ error }) =>
+          this.toastsFacade.showToast({
+            type: 'error',
+            autoDismissTime: null,
+            message: getGenericErrorMessage(error, {
+              notFoundMessage: 'Clip with the given ID was not found. Please check if it is correct.',
+              defaultMessage: 'Something went wrong while loading the data. Please try again later.',
+            }),
+          }),
+        ),
       );
     },
     { dispatch: false },
