@@ -23,7 +23,7 @@ const WHEEL_THROTTLE_TIME_MS = 1000;
   imports: [ClipComponent],
   templateUrl: './clips.component.html',
   styleUrl: './clips.component.css',
-  host: { class: 'flex h-screen overflow-hidden pr-3 px-2 pt-2 pb-4 sm:p-6 lg:px-8' },
+  host: { class: 'flex h-screen overflow-hidden sm:py-4 lg:px-8' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClipsComponent {

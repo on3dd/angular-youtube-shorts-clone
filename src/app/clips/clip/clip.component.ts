@@ -10,7 +10,7 @@ import { ClipVideoComponent } from './clip-video/clip-video.component';
   imports: [ClipVideoComponent, ClipOverlayComponent, ClipActionsComponent],
   templateUrl: './clip.component.html',
   styleUrl: './clip.component.css',
-  host: { class: 'block h-full mb-2 sm:mb-4 scroll-mt-2 scroll-mb-4 sm:scroll-my-6' },
+  host: { class: 'block h-full sm:mb-2 sm:scroll-my-4' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClipComponent {
