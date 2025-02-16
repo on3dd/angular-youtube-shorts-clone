@@ -3,12 +3,14 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ToastsFacade } from './state/toasts.facade';
 import { ToastsEntity } from './state/toasts.models';
 import { ToastComponent } from './toast/toast.component';
+import { toastShowHide } from './toasts-root.animations';
 
 @Component({
   selector: 'app-toasts-root',
   templateUrl: './toasts-root.component.html',
   styleUrl: './toasts-root.component.css',
   imports: [ToastComponent],
+  animations: [toastShowHide],
   host: { class: 'block absolute top-2 left-[50%] -translate-x-[50%] z-[1000]' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
