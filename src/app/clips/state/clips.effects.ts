@@ -1,5 +1,6 @@
 import { isPlatformServer } from '@angular/common';
 import { inject, Injectable, makeStateKey, PLATFORM_ID, TransferState } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
@@ -26,6 +27,8 @@ export class ClipsEffects {
   private readonly transferState = inject(TransferState);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly title = inject(Title);
+
   private readonly clipsApiService = inject(ClipsApiService);
   private readonly toastsFacade = inject(ToastsFacade);
 
@@ -52,6 +55,8 @@ export class ClipsEffects {
     scan((prev, curr) => (curr > prev ? curr : prev)),
     distinctUntilChanged(),
   );
+
+  private readonly activeItem$ = this.store.pipe(select(ClipsSelectors.selectActiveItem));
 
   readonly loadInitialPost$ = createEffect(() => {
     return this.initialId$.pipe(
@@ -97,7 +102,7 @@ export class ClipsEffects {
   readonly loadNextPageByLimit$ = createEffect(() => {
     return this.lastPageLoaded$.pipe(
       filter(Boolean),
-      concatLatestFrom(() => this.store.select(ClipsSelectors.selectActiveItem)),
+      concatLatestFrom(() => this.activeItem$),
       switchMap(([_pageNumber, activeItem]) =>
         this.clipsApiService.getPosts(activeItem?.data.name).pipe(
           mapResponse({
@@ -140,7 +145,7 @@ export class ClipsEffects {
 
   readonly redirectToActiveItem$ = createEffect(
     () => {
-      return this.store.pipe(select(ClipsSelectors.selectActiveItem)).pipe(
+      return this.activeItem$.pipe(
         filter(Boolean),
         tap((activeItem) => this.router.navigate(['/clips', activeItem.data.id])),
       );
@@ -159,6 +164,16 @@ export class ClipsEffects {
           ClipsActions.showMoreItem,
         ),
         tap(() => this.toastsFacade.showToast({ type: 'info', message: 'Sorry, but this is not implemented yet!' })),
+      );
+    },
+    { dispatch: false },
+  );
+
+  readonly setPageTitle$ = createEffect(
+    () => {
+      return this.activeItem$.pipe(
+        filter(Boolean),
+        tap((activeItem) => this.title.setTitle(`${activeItem.data.title} | angular-shorts-clone`)),
       );
     },
     { dispatch: false },
