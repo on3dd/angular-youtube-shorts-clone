@@ -1,1 +1,3 @@
-<app-media-wrapper [sources]="sources()" [autoplay]="active()" />
+@if (sources(); as sources) {
+  <app-media-wrapper [sources]="sources" [autoplay]="active()" />
+}

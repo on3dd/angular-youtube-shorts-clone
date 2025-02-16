@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 
 import * as ClipsActions from './clips.actions';
 import { ClipsEntity } from './clips.models';
-import { ClipsState, initialClipsState, clipsReducer } from './clips.reducer';
+import { clipsReducer, ClipsState, initialClipsState } from './clips.reducer';
 
 describe('Clips Reducer', () => {
   const createClipsEntity = (id: string, name = ''): ClipsEntity => ({

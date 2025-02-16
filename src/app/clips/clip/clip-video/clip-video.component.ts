@@ -29,8 +29,12 @@ export class ClipVideoComponent {
   readonly data = input.required<RedditPostData>();
   readonly active = input.required<boolean>();
 
-  readonly sources = computed<MediaWrapperSources>(() => {
-    const media = this.data().secure_media!.reddit_video!;
+  readonly sources = computed<MediaWrapperSources | null>(() => {
+    const media = this.data().secure_media?.reddit_video;
+
+    if (!media) {
+      return null;
+    }
 
     return {
       fallbackUrl: media.fallback_url,

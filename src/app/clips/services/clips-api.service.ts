@@ -23,7 +23,7 @@ export class ClipsApiService {
           responseType: 'json',
         })
         // Get last post in the list because Reddit API can put subreddit's pinned posts in front of the actual response
-        .pipe(map((response) => response.data.children.at(-1)!))
+        .pipe(map((response) => response.data.children.at(-1) as RedditPostObj))
     );
   }
 
@@ -43,8 +43,11 @@ export class ClipsApiService {
       .pipe(map((response) => this.filterPostsWithMedia(response.data.children)));
   }
 
-  private buildHttpParams(params: Record<string, any>): HttpParams {
-    return Object.entries(params).reduce((acc, [key, value]) => (value ? acc.set(key, value) : acc), new HttpParams());
+  private buildHttpParams(params: Record<string, unknown>): HttpParams {
+    return Object.entries(params).reduce(
+      (acc, [key, value]) => (value ? acc.set(key, value.toString()) : acc),
+      new HttpParams(),
+    );
   }
 
   private filterPostsWithMedia(posts: RedditPostObj[]): RedditPostObj[] {

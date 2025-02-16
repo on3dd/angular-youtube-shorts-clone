@@ -36,12 +36,12 @@ export class ToastsEffects {
     return this.actions$.pipe(
       ofType(ToastsActions.createToast),
       mergeMap(({ toast }) => {
-        if (!toast || toast.autoDismissTime === null) {
+        if (!toast || !toast.autoDismissTime) {
           return of(ToastsActions.dismissToastNoop());
         }
 
         return of(toast).pipe(
-          delay(toast.autoDismissTime!),
+          delay(toast.autoDismissTime),
           map((toast) => ToastsActions.dismissToastAfterTimeout({ toast })),
         );
       }),

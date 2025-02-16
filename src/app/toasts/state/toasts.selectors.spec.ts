@@ -1,5 +1,5 @@
 import { ToastsEntity } from './toasts.models';
-import { toastsAdapter, ToastsPartialState, initialToastsState } from './toasts.reducer';
+import { initialToastsState, toastsAdapter, ToastsPartialState } from './toasts.reducer';
 import * as ToastsSelectors from './toasts.selectors';
 
 describe('Toasts Selectors', () => {

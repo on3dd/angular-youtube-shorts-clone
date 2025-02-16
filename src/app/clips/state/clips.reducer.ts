@@ -8,7 +8,6 @@ export const CLIPS_FEATURE_KEY = 'clips';
 
 export interface ClipsState extends EntityState<ClipsEntity> {
   activeItemIdx: number | null; // which Clips record has been selected
-  error?: string | null; // last known error (if any)
 }
 
 export interface ClipsPartialState {
@@ -28,20 +27,6 @@ const reducer = createReducer(
   initialClipsState,
 
   on(ClipsActions.setTransferedState, (state, { items }) => clipsAdapter.setAll(items, { ...state, activeItemIdx: 0 })),
-
-  on(
-    ClipsActions.loadInitialClip,
-    ClipsActions.loadNextPage,
-    //
-    (state) => ({ ...state, error: null }),
-  ),
-
-  on(
-    ClipsActions.loadInitialClipFailure,
-    ClipsActions.loadNextPageFailure,
-    //
-    (state, { error }) => ({ ...state, error }),
-  ),
 
   on(ClipsActions.loadInitialClipSuccess, (state, { item }) =>
     clipsAdapter.addOne(item, { ...state, activeItemIdx: 0 }),

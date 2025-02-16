@@ -6,8 +6,6 @@ export const selectClipsState = createFeatureSelector<ClipsState>(CLIPS_FEATURE_
 
 const { selectAll } = clipsAdapter.getSelectors();
 
-export const selectClipsError = createSelector(selectClipsState, (state: ClipsState) => state.error);
-
 export const selectAllClips = createSelector(selectClipsState, (state: ClipsState) => selectAll(state));
 
 export const selectActiveItemIdx = createSelector(selectClipsState, (state: ClipsState) => state.activeItemIdx);

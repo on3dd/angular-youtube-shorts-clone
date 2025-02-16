@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule, Store } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { readFirst } from '@nx/angular/testing';
 
 import * as ClipsActions from './clips.actions';
 import { ClipsEffects } from './clips.effects';
 import { ClipsFacade } from './clips.facade';
 import { ClipsEntity } from './clips.models';
-import { CLIPS_FEATURE_KEY, ClipsState, initialClipsState, clipsReducer } from './clips.reducer';
-import * as ClipsSelectors from './clips.selectors';
+import { CLIPS_FEATURE_KEY, clipsReducer, ClipsState } from './clips.reducer';
 
 interface TestSchema {
   clips: ClipsState;

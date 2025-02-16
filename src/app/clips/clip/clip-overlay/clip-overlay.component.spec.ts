@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { ClipOverlayComponent } from './clip-overlay.component';
 
 describe('ClipOverlayComponent', () => {

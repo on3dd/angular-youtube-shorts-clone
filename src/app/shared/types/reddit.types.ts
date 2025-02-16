@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /*!
  * https://github.com/ArthurHeitmann/photon-reddit/blob/master/src/static/scripts/types/redditTypes.ts
  * Licensed under GPL-3.0

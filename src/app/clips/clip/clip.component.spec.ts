@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { ClipComponent } from './clip.component';
 
 describe('ClipComponent', () => {
