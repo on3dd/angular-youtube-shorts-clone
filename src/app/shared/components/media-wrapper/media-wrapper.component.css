@@ -20,7 +20,7 @@
   media-play-button,
   media-mute-button,
   media-volume-range {
-    @apply transition-all;
+    @apply transition-all inline-flex;
   }
 
   media-play-button,
@@ -38,26 +38,38 @@
     --media-control-padding: theme('padding.4');
   }
 
-  .volume-controls-container {
-    display: flex;
+  /* Common rules when focused. */
+  media-volume-range:hover,
+  media-volume-range:focus,
+  media-volume-range:active,
+  media-mute-button:hover,
+  media-mute-button:focus,
+  media-mute-button:active {
+    --media-control-background: theme('colors.zinc.700/50%');
   }
 
-  .volume-controls-container:hover,
-  .volume-controls-container:active {
-    --media-control-background: theme('colors.zinc.700/50%');
+  /* Mute button rules when focused. */
+  media-mute-button:hover,
+  media-mute-button:focus,
+  media-mute-button:active,
+  media-mute-button:has(+ media-volume-range:hover),
+  media-mute-button:has(+ media-volume-range:focus),
+  media-mute-button:has(+ media-volume-range:active) {
+    @apply rounded-r-none;
+  }
 
-    media-mute-button {
-      @apply rounded-r-none;
-    }
-
-    media-volume-range {
-      @apply w-[100px] opacity-100;
-    }
+  /* Volume range rules when focused */
+  media-mute-button:hover + media-volume-range,
+  media-mute-button:focus + media-volume-range,
+  media-mute-button:active + media-volume-range,
+  media-volume-range:hover,
+  media-volume-range:focus,
+  media-volume-range:active {
+    @apply w-[100px] opacity-100 rounded-r-full;
   }
 
   media-time-range {
-    height: 4px;
-    z-index: 100;
+    @apply h-[4px] z-10;
 
     --media-range-padding: 0;
     --media-primary-color: theme('colors.red.600');

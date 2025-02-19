@@ -18,10 +18,9 @@ import {
   matVolumeUp,
 } from '@ng-icons/material-icons/baseline';
 import { MediaController } from 'media-chrome';
-// ts-ignore's below are media-chrome issue, see https://github.com/muxinc/media-chrome/issues/680
-// @ts-ignore
+// @ts-expect-error see https://github.com/muxinc/media-chrome/issues/680
 import { MediaUIEvents } from 'media-chrome/constants';
-// @ts-ignore
+// @ts-expect-error see https://github.com/muxinc/media-chrome/issues/680
 import { EventOrAction } from 'media-chrome/media-store/state-mediator';
 
 import { MediaWrapperVideoDirective } from './media-wrapper-video.directive';
@@ -44,12 +43,11 @@ export type MediaWrapperSources = {
 })
 export class MediaWrapperComponent {
   readonly sources = input.required<MediaWrapperSources>();
-  readonly autoplay = input<boolean>(false);
+  readonly active = input.required<boolean>();
 
   readonly initFinished = output<void>();
 
   private readonly mediaControllerRef = viewChild.required<ElementRef<MediaController>>('controller');
-
   private readonly mediaControllerEl = computed(() => this.mediaControllerRef().nativeElement);
 
   play() {

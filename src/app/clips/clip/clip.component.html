@@ -8,13 +8,18 @@
     <app-clip-video class="w-full bg-black" [data]="data()" [active]="active()" />
 
     <!-- Clip overlay -->
-    <app-clip-overlay class="absolute bottom-0 mt-auto p-3 w-full bg-clip-overlay" [data]="data()" />
+    <app-clip-overlay
+      class="absolute bottom-0 mt-auto p-3 w-full bg-clip-overlay"
+      [data]="data()"
+      [active]="active()"
+    />
   </div>
 
   <!-- Clip actions -->
   <app-clip-actions
     class="absolute top-1/2 right-0 sm:left-[calc(100%+theme(spacing.3))] -translate-y-1/2 p-2 sm:p-0"
     [data]="data()"
+    [active]="active()"
     (prevItem)="prevItem.emit($event)"
     (nextItem)="nextItem.emit($event)"
     (likeItem)="likeItem.emit($event)"

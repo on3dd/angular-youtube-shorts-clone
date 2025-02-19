@@ -34,6 +34,7 @@ type MenuAction = {
 })
 export class ClipActionsComponent {
   readonly data = input.required<RedditPostData>();
+  readonly active = input.required<boolean>();
 
   readonly prevItem = output<RedditPostData>();
   readonly nextItem = output<RedditPostData>();

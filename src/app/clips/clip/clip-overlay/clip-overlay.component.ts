@@ -10,4 +10,5 @@ import { RedditPostData } from 'src/app/shared/types/reddit.types';
 })
 export class ClipOverlayComponent {
   readonly data = input.required<RedditPostData>();
+  readonly active = input.required<boolean>();
 }

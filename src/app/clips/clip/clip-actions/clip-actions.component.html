@@ -2,6 +2,7 @@
   @for (item of actions(); track item.name) {
     <button
       class="text-center w-12 text-zinc-50 sm:text-zinc-800 sm:dark:text-zinc-50 cursor-default transition-colors"
+      [tabindex]="active() ? 0 : -1"
       (click)="item.onClick?.()"
     >
       <div
