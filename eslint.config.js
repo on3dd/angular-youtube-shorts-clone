@@ -19,15 +19,7 @@ export default tseslint.config(
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
   {
-    ignores: [
-      '**/dist',
-      '**/node_modules',
-      '**/database.types.ts',
-      'src/index.html',
-      '.angular',
-      '.nx',
-      'jest.{config,preset}.{js,ts}',
-    ],
+    ignores: ['**/dist', '**/node_modules', '**/database.types.ts', 'src/index.html', '.angular', '.nx'],
   },
   {
     languageOptions: {
@@ -106,7 +98,13 @@ export default tseslint.config(
     },
   },
   {
-    files: ['eslint.config.js', 'tailwind.config.js', 'postcss.config.js', 'src/main.server.ts'],
+    files: [
+      'eslint.config.js',
+      'tailwind.config.js',
+      'postcss.config.js',
+      'jest.{config,preset}.{js,ts}',
+      'src/main.server.ts',
+    ],
     rules: {
       'import/no-default-export': 'off',
     },
