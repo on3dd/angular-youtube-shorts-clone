@@ -13,4 +13,4 @@ export const dismissToastAfterTimeout = createAction(
   props<{ toast: ToastsEntity }>(),
 );
 
-export const dismissToastNoop = createAction('[Toasts] Dismiss Toast Noop');
+export const dismissToastNoop = createAction('[Toasts] Dismiss Toast Noop', props<{ toast: ToastsEntity }>());

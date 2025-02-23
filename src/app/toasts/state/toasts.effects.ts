@@ -9,7 +9,7 @@ import { ToastsEntity } from './toasts.models';
 import * as fromToasts from './toasts.reducer';
 import { selectCreatedCount } from './toasts.selectors';
 
-const AUTO_DISMISS_DELAY_MS = 5000;
+export const AUTO_DISMISS_DELAY_MS = 5000;
 
 @Injectable()
 export class ToastsEffects {
@@ -37,7 +37,7 @@ export class ToastsEffects {
       ofType(ToastsActions.createToast),
       mergeMap(({ toast }) => {
         if (!toast || !toast.autoDismissTime) {
-          return of(ToastsActions.dismissToastNoop());
+          return of(ToastsActions.dismissToastNoop({ toast }));
         }
 
         return of(toast).pipe(

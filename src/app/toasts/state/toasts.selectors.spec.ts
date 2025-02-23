@@ -1,58 +1,39 @@
 import { ToastsEntity } from './toasts.models';
-import { initialToastsState, toastsAdapter, ToastsPartialState } from './toasts.reducer';
+import { initialToastsState, toastsAdapter, ToastsPartialState, ToastsState } from './toasts.reducer';
 import * as ToastsSelectors from './toasts.selectors';
+import { createToastsEntity } from './utils/toasts.testing-utils';
 
 describe('Toasts Selectors', () => {
-  const ERROR_MSG = 'No Error Available';
-  const getToastsId = (it: ToastsEntity) => it.id;
-  const createToastsEntity = (id: string, name = '') =>
-    ({
-      id,
-      name: name || `name-${id}`,
-    }) as ToastsEntity;
-
+  let toasts: ToastsEntity[];
   let state: ToastsPartialState;
 
   beforeEach(() => {
+    toasts = [
+      //
+      createToastsEntity('Toast 1', 1),
+      createToastsEntity('Toast 2', 2),
+      createToastsEntity('Toast 3', 3),
+    ];
+
     state = {
-      toasts: toastsAdapter.setAll(
-        [createToastsEntity('PRODUCT-AAA'), createToastsEntity('PRODUCT-BBB'), createToastsEntity('PRODUCT-CCC')],
-        {
-          ...initialToastsState,
-          selectedId: 'PRODUCT-BBB',
-          error: ERROR_MSG,
-          loaded: true,
-        },
-      ),
+      toasts: toastsAdapter.setAll(toasts, initialToastsState),
     };
   });
 
   describe('Toasts Selectors', () => {
     it('selectAllToasts() should return the list of Toasts', () => {
       const results = ToastsSelectors.selectAllToasts(state);
-      const selId = getToastsId(results[1]);
 
       expect(results.length).toBe(3);
-      expect(selId).toBe('PRODUCT-BBB');
+      expect(results).toEqual(toasts);
     });
 
-    it('selectEntity() should return the selected Entity', () => {
-      const result = ToastsSelectors.selectEntity(state) as ToastsEntity;
-      const selId = getToastsId(result);
+    it('selectCreatedCount() should return the total amount of entities created.', () => {
+      const result = ToastsSelectors.selectCreatedCount.projector({
+        createdCount: toasts.length,
+      } as ToastsState);
 
-      expect(selId).toBe('PRODUCT-BBB');
-    });
-
-    it('selectToastsLoaded() should return the current "loaded" status', () => {
-      const result = ToastsSelectors.selectToastsLoaded(state);
-
-      expect(result).toBe(true);
-    });
-
-    it('selectToastsError() should return the current "error" state', () => {
-      const result = ToastsSelectors.selectToastsError(state);
-
-      expect(result).toBe(ERROR_MSG);
+      expect(result).toBe(toasts.length);
     });
   });
 });

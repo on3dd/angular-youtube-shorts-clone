@@ -18,7 +18,6 @@ export const toastsAdapter: EntityAdapter<ToastsEntity> = createEntityAdapter<To
 
 export const initialToastsState: ToastsState = toastsAdapter.getInitialState({
   createdCount: 0,
-  entities: [],
 });
 
 const reducer = createReducer(

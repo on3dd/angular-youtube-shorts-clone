@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { EffectsModule } from '@ngrx/effects';
-import { Store, StoreModule } from '@ngrx/store';
-import { readFirst } from '@nx/angular/testing';
+import { EffectsModule, provideEffects } from '@ngrx/effects';
+import { provideState, provideStore, Store, StoreModule } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { firstValueFrom } from 'rxjs';
 
 import * as ToastsActions from './toasts.actions';
-import { ToastsEffects } from './toasts.effects';
+import { AUTO_DISMISS_DELAY_MS, ToastsEffects } from './toasts.effects';
 import { ToastsFacade } from './toasts.facade';
 import { ToastsEntity } from './toasts.models';
-import { TOASTS_FEATURE_KEY, toastsReducer, ToastsState } from './toasts.reducer';
+import { initialToastsState, TOASTS_FEATURE_KEY, toastsReducer, ToastsState } from './toasts.reducer';
+import { selectAllToasts } from './toasts.selectors';
+import { createToast, createToastsEntity } from './utils/toasts.testing-utils';
 
 interface TestSchema {
   toasts: ToastsState;
@@ -16,11 +19,8 @@ interface TestSchema {
 
 describe('ToastsFacade', () => {
   let facade: ToastsFacade;
+  // let store: MockStore<TestSchema>;
   let store: Store<TestSchema>;
-  const createToastsEntity = (id: string, name = ''): ToastsEntity => ({
-    id,
-    name: name || `name-${id}`,
-  });
 
   describe('used in NgModule', () => {
     beforeEach(() => {
@@ -34,52 +34,48 @@ describe('ToastsFacade', () => {
         imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), CustomFeatureModule],
       })
       class RootModule {}
+
       TestBed.configureTestingModule({ imports: [RootModule] });
 
+      // TestBed.configureTestingModule({
+      //   imports: [],
+      //   providers: [
+      //     ToastsFacade,
+      //     // ToastsEffects,
+      //     provideEffects(ToastsEffects),
+      //     provideStore(),
+      //     provideState(TOASTS_FEATURE_KEY, toastsReducer),
+      //     provideMockStore({
+      //       initialState: initialToastsState,
+      //       // selectors: [{ selector: selectAllToasts, value: [] }],
+      //     }),
+      //     // provideState(TOASTS_FEATURE_KEY, toastsReducer),
+      //   ],
+      // });
+
+      // store = TestBed.inject(MockStore);
       store = TestBed.inject(Store);
       facade = TestBed.inject(ToastsFacade);
     });
 
-    /**
-     * The initially generated facade::loadAll() returns empty array
-     */
-    it('loadAll() should return empty list with loaded == true', async () => {
-      let list = await readFirst(facade.allToasts$);
-      let isLoaded = await readFirst(facade.loaded$);
-
-      expect(list.length).toBe(0);
-      expect(isLoaded).toBe(false);
-
-      facade.init();
-
-      list = await readFirst(facade.allToasts$);
-      isLoaded = await readFirst(facade.loaded$);
-
-      expect(list.length).toBe(0);
-      expect(isLoaded).toBe(true);
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
-    /**
-     * Use `loadToastsSuccess` to manually update list
-     */
-    it('allToasts$ should return the loaded list; and loaded flag == true', async () => {
-      let list = await readFirst(facade.allToasts$);
-      let isLoaded = await readFirst(facade.loaded$);
+    it('showToast() should call the ToastsActions.showToast', () => {
+      const spy = jest.spyOn(ToastsActions, 'showToast');
 
-      expect(list.length).toBe(0);
-      expect(isLoaded).toBe(false);
+      facade.showToast(createToast('Toast 1'));
 
-      store.dispatch(
-        ToastsActions.showToast({
-          toasts: [createToastsEntity('AAA'), createToastsEntity('BBB')],
-        }),
-      );
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
 
-      list = await readFirst(facade.allToasts$);
-      isLoaded = await readFirst(facade.loaded$);
+    it('dismissToast() should call the ToastsActions.dismissToast', () => {
+      const spy = jest.spyOn(ToastsActions, 'dismissToast');
 
-      expect(list.length).toBe(2);
-      expect(isLoaded).toBe(true);
+      facade.dismissToast(createToastsEntity('Toast 1'));
+
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 });
