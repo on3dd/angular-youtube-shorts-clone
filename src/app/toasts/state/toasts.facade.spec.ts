@@ -1,26 +1,16 @@
 import { NgModule } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { EffectsModule, provideEffects } from '@ngrx/effects';
-import { provideState, provideStore, Store, StoreModule } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { firstValueFrom } from 'rxjs';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
 import * as ToastsActions from './toasts.actions';
-import { AUTO_DISMISS_DELAY_MS, ToastsEffects } from './toasts.effects';
+import { ToastsEffects } from './toasts.effects';
 import { ToastsFacade } from './toasts.facade';
-import { ToastsEntity } from './toasts.models';
-import { initialToastsState, TOASTS_FEATURE_KEY, toastsReducer, ToastsState } from './toasts.reducer';
-import { selectAllToasts } from './toasts.selectors';
+import { TOASTS_FEATURE_KEY, toastsReducer } from './toasts.reducer';
 import { createToast, createToastsEntity } from './utils/toasts.testing-utils';
-
-interface TestSchema {
-  toasts: ToastsState;
-}
 
 describe('ToastsFacade', () => {
   let facade: ToastsFacade;
-  // let store: MockStore<TestSchema>;
-  let store: Store<TestSchema>;
 
   describe('used in NgModule', () => {
     beforeEach(() => {
@@ -37,24 +27,6 @@ describe('ToastsFacade', () => {
 
       TestBed.configureTestingModule({ imports: [RootModule] });
 
-      // TestBed.configureTestingModule({
-      //   imports: [],
-      //   providers: [
-      //     ToastsFacade,
-      //     // ToastsEffects,
-      //     provideEffects(ToastsEffects),
-      //     provideStore(),
-      //     provideState(TOASTS_FEATURE_KEY, toastsReducer),
-      //     provideMockStore({
-      //       initialState: initialToastsState,
-      //       // selectors: [{ selector: selectAllToasts, value: [] }],
-      //     }),
-      //     // provideState(TOASTS_FEATURE_KEY, toastsReducer),
-      //   ],
-      // });
-
-      // store = TestBed.inject(MockStore);
-      store = TestBed.inject(Store);
       facade = TestBed.inject(ToastsFacade);
     });
 
