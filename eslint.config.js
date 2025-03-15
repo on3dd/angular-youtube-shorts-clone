@@ -3,6 +3,7 @@ import tsParser from '@typescript-eslint/parser';
 import angular from 'angular-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
+import jestPlugin from 'eslint-plugin-jest';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import simpleImportsPlugin from 'eslint-plugin-simple-import-sort';
 import path from 'path';
@@ -107,6 +108,21 @@ export default tseslint.config(
     ],
     rules: {
       'import/no-default-export': 'off',
+    },
+  },
+  {
+    // update this to match your test files
+    files: ['**/*.spec.ts', '**/*.test.ts'],
+    ...jestPlugin.configs['flat/recommended'],
+    ...jestPlugin.configs['flat/style'],
+    plugins: { jest: jestPlugin },
+    languageOptions: {
+      globals: jestPlugin.environments.globals.globals,
+    },
+    rules: {
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/unbound-method': 'off',
+      'jest/unbound-method': 'error',
     },
   },
 );
