@@ -15,7 +15,7 @@ export interface ClipsPartialState {
 }
 
 export const clipsAdapter: EntityAdapter<ClipsEntity> = createEntityAdapter<ClipsEntity>({
-  selectId: (item) => item.data.name,
+  selectId: (item) => item.name,
 });
 
 export const initialClipsState: ClipsState = clipsAdapter.getInitialState({

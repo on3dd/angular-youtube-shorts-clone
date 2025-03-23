@@ -79,7 +79,7 @@ export class ClipsEffects {
   readonly loadInitialPostSuccess$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ClipsActions.loadInitialClipSuccess),
-      map(({ item }) => ClipsActions.loadNextPage({ after: item.data.name })),
+      map(({ item }) => ClipsActions.loadNextPage({ after: item.name })),
     );
   });
 
@@ -103,7 +103,7 @@ export class ClipsEffects {
       filter(Boolean),
       concatLatestFrom(() => this.activeItem$),
       switchMap(([_pageNumber, activeItem]) =>
-        this.clipsApiService.getPosts(activeItem?.data.name).pipe(
+        this.clipsApiService.getPosts(activeItem?.name).pipe(
           mapResponse({
             next: (items) => ClipsActions.loadNextPageSuccess({ items }),
             error: (error) => ClipsActions.loadNextPageFailure({ error }),
@@ -146,7 +146,7 @@ export class ClipsEffects {
     () => {
       return this.activeItem$.pipe(
         filter(Boolean),
-        tap((activeItem) => this.router.navigate(['/clips', activeItem.data.id])),
+        tap((activeItem) => this.router.navigate(['/clips', activeItem.id])),
       );
     },
     { dispatch: false },
@@ -172,7 +172,7 @@ export class ClipsEffects {
     () => {
       return this.activeItem$.pipe(
         filter(Boolean),
-        tap((activeItem) => this.title.setTitle(`${activeItem.data.title} | angular-shorts-clone`)),
+        tap((activeItem) => this.title.setTitle(`${activeItem.title} | angular-shorts-clone`)),
       );
     },
     { dispatch: false },
