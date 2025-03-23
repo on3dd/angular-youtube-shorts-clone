@@ -15,6 +15,7 @@ import { fromEvent, throttleTime } from 'rxjs';
 
 import { ClipComponent } from './clip/clip.component';
 import { ClipsFacade } from './state/clips.facade';
+import { ClipsEntity } from './state/clips.models';
 
 const WHEEL_THROTTLE_TIME_MS = 1000;
 
@@ -75,23 +76,23 @@ export class ClipsComponent {
     this.clipsFacade.nextItem();
   }
 
-  likeItem() {
-    this.clipsFacade.likeItem();
+  likeItem(item: ClipsEntity) {
+    this.clipsFacade.likeItem(item);
   }
 
-  dislikeItem() {
-    this.clipsFacade.dislikeItem();
+  dislikeItem(item: ClipsEntity) {
+    this.clipsFacade.dislikeItem(item);
   }
 
-  commentItem() {
-    this.clipsFacade.commentItem();
+  commentItem(item: ClipsEntity) {
+    this.clipsFacade.commentItem(item);
   }
 
-  shareItem() {
-    this.clipsFacade.shareItem();
+  shareItem(item: ClipsEntity) {
+    this.clipsFacade.shareItem(item);
   }
 
-  showMoreItem() {
-    this.clipsFacade.showMoreItem();
+  showMoreItem(item: ClipsEntity) {
+    this.clipsFacade.showMoreItem(item);
   }
 }

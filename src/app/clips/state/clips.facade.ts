@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import * as ClipsActions from './clips.actions';
+import { ClipsEntity } from './clips.models';
 import * as ClipsSelectors from './clips.selectors';
 
 @Injectable()
@@ -20,23 +21,23 @@ export class ClipsFacade {
     this.store.dispatch(ClipsActions.showNextItem());
   }
 
-  likeItem() {
-    this.store.dispatch(ClipsActions.likeItem());
+  likeItem(item: ClipsEntity) {
+    this.store.dispatch(ClipsActions.likeItem({ item }));
   }
 
-  dislikeItem() {
-    this.store.dispatch(ClipsActions.dislikeItem());
+  dislikeItem(item: ClipsEntity) {
+    this.store.dispatch(ClipsActions.dislikeItem({ item }));
   }
 
-  commentItem() {
-    this.store.dispatch(ClipsActions.commentItem());
+  commentItem(item: ClipsEntity) {
+    this.store.dispatch(ClipsActions.commentItem({ item }));
   }
 
-  shareItem() {
-    this.store.dispatch(ClipsActions.shareItem());
+  shareItem(item: ClipsEntity) {
+    this.store.dispatch(ClipsActions.shareItem({ item }));
   }
 
-  showMoreItem() {
-    this.store.dispatch(ClipsActions.showMoreItem());
+  showMoreItem(item: ClipsEntity) {
+    this.store.dispatch(ClipsActions.showMoreItem({ item }));
   }
 }

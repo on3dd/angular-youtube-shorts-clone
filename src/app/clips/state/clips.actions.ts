@@ -29,8 +29,8 @@ export const showNextItem = createAction('[Clips Page] Show Next Item');
 export const showPrevItem = createAction('[Clips Page] Show Prev Item');
 
 // Not implemented yet
-export const likeItem = createAction('[Clips Page] Like Item');
-export const dislikeItem = createAction('[Clips Page] Dislike Item');
-export const commentItem = createAction('[Clips Page] Comment Item');
-export const shareItem = createAction('[Clips Page] Share Item');
-export const showMoreItem = createAction('[Clips Page] Show More Item');
+export const likeItem = createAction('[Clips Page] Like Item', props<{ item: ClipsEntity }>());
+export const dislikeItem = createAction('[Clips Page] Dislike Item', props<{ item: ClipsEntity }>());
+export const commentItem = createAction('[Clips Page] Comment Item', props<{ item: ClipsEntity }>());
+export const shareItem = createAction('[Clips Page] Share Item', props<{ item: ClipsEntity }>());
+export const showMoreItem = createAction('[Clips Page] Show More Item', props<{ item: ClipsEntity }>());

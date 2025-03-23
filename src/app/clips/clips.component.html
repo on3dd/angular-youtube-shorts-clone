@@ -8,11 +8,11 @@
         [active]="idx === vm.activeItemIdx"
         (prevItem)="prevItem()"
         (nextItem)="nextItem()"
-        (likeItem)="likeItem()"
-        (dislikeItem)="dislikeItem()"
-        (commentItem)="commentItem()"
-        (shareItem)="shareItem()"
-        (showMoreItem)="showMoreItem()"
+        (likeItem)="likeItem($event)"
+        (dislikeItem)="dislikeItem($event)"
+        (commentItem)="commentItem($event)"
+        (shareItem)="shareItem($event)"
+        (showMoreItem)="showMoreItem($event)"
       />
     }
   </div>

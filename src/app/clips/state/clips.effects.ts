@@ -5,7 +5,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom, mapResponse } from '@ngrx/operators';
 import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, exhaustMap, filter, first, map, of, scan, switchMap, takeWhile, tap } from 'rxjs';
+import { distinctUntilChanged, exhaustMap, filter, first, map, of, switchMap, takeWhile, tap } from 'rxjs';
 import { getGenericErrorMessage } from 'src/app/shared/utils/error.utils';
 import { ToastsFacade } from 'src/app/toasts/state/toasts.facade';
 
@@ -16,7 +16,7 @@ import * as fromClips from './clips.reducer';
 import * as ClipsSelectors from './clips.selectors';
 import { selecClipsCount } from './clips.selectors';
 
-const CLIPS_STATE_KEY = makeStateKey<ClipsEntity[]>('TRANSFERED_STATE');
+export const CLIPS_STATE_KEY = makeStateKey<ClipsEntity[]>('TRANSFERED_STATE');
 
 @Injectable()
 export class ClipsEffects {
@@ -32,7 +32,7 @@ export class ClipsEffects {
   private readonly clipsApiService = inject(ClipsApiService);
   private readonly toastsFacade = inject(ToastsFacade);
 
-  private readonly initialId$ = this.router.events.pipe(
+  readonly initialId$ = this.router.events.pipe(
     filter((event) => event instanceof NavigationEnd),
     first(),
     map(() => {
@@ -48,15 +48,14 @@ export class ClipsEffects {
     map((params) => params['id']),
   );
 
-  private readonly lastPageLoaded$ = this.store.pipe(
+  readonly lastPageLoaded$ = this.store.pipe(
     select(ClipsSelectors.selectActiveItemIdx),
     filter((activeItemIdx) => activeItemIdx !== null),
     map((activeItemIdx) => Math.floor(activeItemIdx / PAGE_SIZE)),
-    scan((prev, curr) => (curr > prev ? curr : prev)),
-    distinctUntilChanged(),
+    distinctUntilChanged((prev, curr) => curr > prev),
   );
 
-  private readonly activeItem$ = this.store.pipe(select(ClipsSelectors.selectActiveItem));
+  readonly activeItem$ = this.store.pipe(select(ClipsSelectors.selectActiveItem));
 
   readonly loadInitialPost$ = createEffect(() => {
     return this.initialId$.pipe(

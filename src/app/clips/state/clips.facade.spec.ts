@@ -1,85 +1,100 @@
 import { NgModule } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
-import { Store, StoreModule } from '@ngrx/store';
-import { readFirst } from '@nx/angular/testing';
+import { StoreModule } from '@ngrx/store';
+import { ToastsFacade } from 'src/app/toasts/state/toasts.facade';
 
+import { ClipsApiService } from '../services/clips-api.service';
 import * as ClipsActions from './clips.actions';
 import { ClipsEffects } from './clips.effects';
 import { ClipsFacade } from './clips.facade';
-import { ClipsEntity } from './clips.models';
-import { CLIPS_FEATURE_KEY, clipsReducer, ClipsState } from './clips.reducer';
-
-interface TestSchema {
-  clips: ClipsState;
-}
+import { CLIPS_FEATURE_KEY, clipsReducer } from './clips.reducer';
+import { createMockClipsEntity } from './utils/clips.testing-utils';
 
 describe('ClipsFacade', () => {
   let facade: ClipsFacade;
-  let store: Store<TestSchema>;
-  const createClipsEntity = (id: string, name = ''): ClipsEntity => ({
-    id,
-    name: name || `name-${id}`,
-  });
 
   describe('used in NgModule', () => {
     beforeEach(() => {
       @NgModule({
-        imports: [StoreModule.forFeature(CLIPS_FEATURE_KEY, clipsReducer), EffectsModule.forFeature([ClipsEffects])],
-        providers: [ClipsFacade],
+        imports: [
+          StoreModule.forFeature(CLIPS_FEATURE_KEY, clipsReducer),
+          EffectsModule.forFeature([ClipsEffects]),
+          RouterModule.forChild([]),
+        ],
+        providers: [
+          ClipsFacade,
+          { provide: ClipsApiService, useValue: {} },
+          { provide: ToastsFacade, useValue: { showToast: jest.fn() } },
+        ],
       })
       class CustomFeatureModule {}
 
       @NgModule({
-        imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), CustomFeatureModule],
+        imports: [StoreModule.forRoot({}), EffectsModule.forRoot([]), RouterModule.forRoot([]), CustomFeatureModule],
       })
       class RootModule {}
+
       TestBed.configureTestingModule({ imports: [RootModule] });
 
-      store = TestBed.inject(Store);
       facade = TestBed.inject(ClipsFacade);
     });
 
-    /**
-     * The initially generated facade::loadAll() returns empty array
-     */
-    it('loadAll() should return empty list with loaded == true', async () => {
-      let list = await readFirst(facade.allClips$);
-      let isLoaded = await readFirst(facade.loaded$);
-
-      expect(list.length).toBe(0);
-      expect(isLoaded).toBe(false);
-
-      facade.init();
-
-      list = await readFirst(facade.allClips$);
-      isLoaded = await readFirst(facade.loaded$);
-
-      expect(list.length).toBe(0);
-      expect(isLoaded).toBe(true);
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
-    /**
-     * Use `loadClipsSuccess` to manually update list
-     */
-    it('allClips$ should return the loaded list; and loaded flag == true', async () => {
-      let list = await readFirst(facade.allClips$);
-      let isLoaded = await readFirst(facade.loaded$);
+    it('prevItem() should call the ClipsActions.showPrevItem', () => {
+      const spy = jest.spyOn(ClipsActions, 'showPrevItem');
+      expect(spy).toHaveBeenCalledTimes(0);
 
-      expect(list.length).toBe(0);
-      expect(isLoaded).toBe(false);
+      facade.prevItem();
+      expect(spy).toHaveBeenCalledTimes(1);
 
-      store.dispatch(
-        ClipsActions.loadClipsSuccess({
-          clips: [createClipsEntity('AAA'), createClipsEntity('BBB')],
-        }),
-      );
+      facade.prevItem();
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
 
-      list = await readFirst(facade.allClips$);
-      isLoaded = await readFirst(facade.loaded$);
+    it('nextItem() should call the ClipsActions.showNextItem', () => {
+      const spy = jest.spyOn(ClipsActions, 'showNextItem');
+      expect(spy).toHaveBeenCalledTimes(0);
 
-      expect(list.length).toBe(2);
-      expect(isLoaded).toBe(true);
+      facade.nextItem();
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      facade.nextItem();
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('likeItem() should call the ClipsActions.likeItem', () => {
+      const spy = jest.spyOn(ClipsActions, 'likeItem');
+      expect(spy).toHaveBeenCalledTimes(0);
+
+      facade.likeItem(createMockClipsEntity({ id: '1', name: 'test1', title: 'Test 1' }));
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      facade.likeItem(createMockClipsEntity({ id: '2', name: 'test2', title: 'Test 2' }));
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('dislikeItem() should call the ClipsActions.dislikeItem', () => {
+      const spy = jest.spyOn(ClipsActions, 'dislikeItem');
+      expect(spy).toHaveBeenCalledTimes(0);
+
+      facade.dislikeItem(createMockClipsEntity({ id: '1', name: 'test1', title: 'Test 1' }));
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      facade.dislikeItem(createMockClipsEntity({ id: '2', name: 'test2', title: 'Test 2' }));
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('commentItem() should call the ClipsActions.commentItem', () => {
+      const spy = jest.spyOn(ClipsActions, 'commentItem');
+      expect(spy).toHaveBeenCalledTimes(0);
+
+      facade.commentItem(createMockClipsEntity({ id: '1', name: 'test1', title: 'Test 1' }));
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 });

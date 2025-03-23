@@ -35,25 +35,31 @@ const reducer = createReducer(
   on(ClipsActions.loadNextPageSuccess, (state, { items }) => clipsAdapter.addMany(items, state)),
 
   on(ClipsActions.showPrevItem, (state) => {
-    if (!state.activeItemIdx) {
+    if (state.activeItemIdx === null) {
       return state;
     }
 
-    return {
-      ...state,
-      activeItemIdx: Math.max(0, state.activeItemIdx - 1),
-    };
+    if (state.activeItemIdx === 0) {
+      return state;
+    }
+
+    return { ...state, activeItemIdx: state.activeItemIdx - 1 };
   }),
 
   on(ClipsActions.showNextItem, (state) => {
-    if (state.activeItemIdx === null || !state.ids.length) {
+    if (state.activeItemIdx === null) {
       return state;
     }
 
-    return {
-      ...state,
-      activeItemIdx: Math.min(state.activeItemIdx + 1, state.ids.length - 1),
-    };
+    if (!state.ids.length) {
+      return state;
+    }
+
+    if (state.activeItemIdx === state.ids.length - 1) {
+      return state;
+    }
+
+    return { ...state, activeItemIdx: state.activeItemIdx + 1 };
   }),
 );
 

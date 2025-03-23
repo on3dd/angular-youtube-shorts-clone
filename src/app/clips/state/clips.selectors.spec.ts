@@ -1,58 +1,64 @@
 import { ClipsEntity } from './clips.models';
 import { clipsAdapter, ClipsPartialState, initialClipsState } from './clips.reducer';
 import * as ClipsSelectors from './clips.selectors';
+import { createMockClipsEntity } from './utils/clips.testing-utils';
 
 describe('Clips Selectors', () => {
-  const ERROR_MSG = 'No Error Available';
-  const getClipsId = (it: ClipsEntity) => it.id;
-  const createClipsEntity = (id: string, name = '') =>
-    ({
-      id,
-      name: name || `name-${id}`,
-    }) as ClipsEntity;
+  const clips: ClipsEntity[] = [
+    createMockClipsEntity({ id: '1', name: 'test1', title: 'Test 1' }),
+    createMockClipsEntity({ id: '2', name: 'test2', title: 'Test 2' }),
+    createMockClipsEntity({ id: '3', name: 'test3', title: 'Test 3' }),
+  ];
+
+  const populateState = (activeItemIdx: number | null = 0) => ({
+    clips: clipsAdapter.setAll(clips, { ...initialClipsState, activeItemIdx }),
+  });
 
   let state: ClipsPartialState;
 
   beforeEach(() => {
-    state = {
-      clips: clipsAdapter.setAll(
-        [createClipsEntity('PRODUCT-AAA'), createClipsEntity('PRODUCT-BBB'), createClipsEntity('PRODUCT-CCC')],
-        {
-          ...initialClipsState,
-          selectedId: 'PRODUCT-BBB',
-          error: ERROR_MSG,
-          loaded: true,
-        },
-      ),
-    };
+    state = { clips: initialClipsState };
   });
 
   describe('Clips Selectors', () => {
     it('selectAllClips() should return the list of Clips', () => {
-      const results = ClipsSelectors.selectAllClips(state);
-      const selId = getClipsId(results[1]);
+      // Empty state
+      const result1 = ClipsSelectors.selectAllClips(state);
+      expect(result1).toEqual([]);
 
-      expect(results.length).toBe(3);
-      expect(selId).toBe('PRODUCT-BBB');
+      // Populated state
+      const result2 = ClipsSelectors.selectAllClips(populateState());
+      expect(result2).toEqual(clips);
     });
 
-    it('selectEntity() should return the selected Entity', () => {
-      const result = ClipsSelectors.selectEntity(state) as ClipsEntity;
-      const selId = getClipsId(result);
+    it('selectActiveItemIdx() should return the active item index', () => {
+      // Empty state
+      const result1 = ClipsSelectors.selectActiveItemIdx(state);
+      expect(result1).toBe(null);
 
-      expect(selId).toBe('PRODUCT-BBB');
+      // Populated state
+      const result2 = ClipsSelectors.selectActiveItemIdx(populateState(0));
+      expect(result2).toBe(0);
     });
 
-    it('selectClipsLoaded() should return the current "loaded" status', () => {
-      const result = ClipsSelectors.selectClipsLoaded(state);
+    it('selectActiveItem() should return the active item', () => {
+      // Empty state
+      const result1 = ClipsSelectors.selectActiveItem(state);
+      expect(result1).toEqual(null);
 
-      expect(result).toBe(true);
+      // Populated state
+      const result2 = ClipsSelectors.selectActiveItem(populateState(0));
+      expect(result2).toEqual(clips[0]);
     });
 
-    it('selectClipsError() should return the current "error" state', () => {
-      const result = ClipsSelectors.selectClipsError(state);
+    it('selecClipsCount() should return the total amount of entities created.', () => {
+      // Empty state
+      const result1 = ClipsSelectors.selecClipsCount(state);
+      expect(result1).toBe(0);
 
-      expect(result).toBe(ERROR_MSG);
+      // Populated state
+      const result2 = ClipsSelectors.selecClipsCount(populateState());
+      expect(result2).toBe(3);
     });
   });
 });
