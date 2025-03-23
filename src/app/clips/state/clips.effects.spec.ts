@@ -183,7 +183,7 @@ describe('ClipsEffects', () => {
         actions = of(ClipsActions.loadInitialClipSuccess({ item: mockItem }));
 
         expectObservable(effects.loadInitialPostSuccess$).toBe('(a|)', {
-          a: ClipsActions.loadNextPage({ after: mockItem.data.name }),
+          a: ClipsActions.loadNextPage({ after: mockItem.name }),
         });
       });
     });
@@ -287,7 +287,7 @@ describe('ClipsEffects', () => {
 
       effects.redirectToActiveItem$.subscribe();
 
-      expect(router.navigate).toHaveBeenCalledWith(['/clips', mockItem.data.id]);
+      expect(router.navigate).toHaveBeenCalledWith(['/clips', mockItem.id]);
     });
 
     it('should not navigate when there is no active item', () => {
@@ -335,7 +335,7 @@ describe('ClipsEffects', () => {
 
       effects.setPageTitle$.subscribe();
 
-      expect(titleService.setTitle).toHaveBeenCalledWith(`${mockItem.data.title} | angular-shorts-clone`);
+      expect(titleService.setTitle).toHaveBeenCalledWith(`${mockItem.title} | angular-shorts-clone`);
     });
 
     it('should not set title when there is no active item', () => {

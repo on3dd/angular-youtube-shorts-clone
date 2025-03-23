@@ -28,8 +28,8 @@ describe('Clips Reducer', () => {
 
       expect(result).toEqual<ClipsState>({
         activeItemIdx: 0,
-        ids: items.map((item) => item.data.name),
-        entities: items.reduce((acc, item) => ({ ...acc, [item.data.name]: item }), {}),
+        ids: items.map((item) => item.name),
+        entities: items.reduce((acc, item) => ({ ...acc, [item.name]: item }), {}),
       });
     });
   });
@@ -42,8 +42,8 @@ describe('Clips Reducer', () => {
 
       expect(result).toEqual<ClipsState>({
         activeItemIdx: 0,
-        ids: [item.data.name],
-        entities: { [item.data.name]: item },
+        ids: [item.name],
+        entities: { [item.name]: item },
       });
     });
   });
@@ -52,8 +52,8 @@ describe('Clips Reducer', () => {
     it('should add new items to the state after existing ones', () => {
       const state: ClipsState = {
         activeItemIdx: 0,
-        ids: items.map((item) => item.data.name),
-        entities: items.reduce((acc, item) => ({ ...acc, [item.data.name]: item }), {}),
+        ids: items.map((item) => item.name),
+        entities: items.reduce((acc, item) => ({ ...acc, [item.name]: item }), {}),
       };
 
       const newItems: ClipsEntity[] = [
@@ -67,8 +67,8 @@ describe('Clips Reducer', () => {
 
       expect(result).toEqual<ClipsState>({
         activeItemIdx: 0,
-        ids: [...state.ids, ...newItems.map((item) => item.data.name)] as string[],
-        entities: { ...state.entities, ...newItems.reduce((acc, item) => ({ ...acc, [item.data.name]: item }), {}) },
+        ids: [...state.ids, ...newItems.map((item) => item.name)] as string[],
+        entities: { ...state.entities, ...newItems.reduce((acc, item) => ({ ...acc, [item.name]: item }), {}) },
       });
     });
   });
@@ -90,8 +90,8 @@ describe('Clips Reducer', () => {
     it('should not change the state if activeItemIdx is 0', () => {
       const state: ClipsState = {
         activeItemIdx: 0,
-        ids: items.map((item) => item.data.name),
-        entities: items.reduce((acc, item) => ({ ...acc, [item.data.name]: item }), {}),
+        ids: items.map((item) => item.name),
+        entities: items.reduce((acc, item) => ({ ...acc, [item.name]: item }), {}),
       };
 
       const action = ClipsActions.showPrevItem();
@@ -103,8 +103,8 @@ describe('Clips Reducer', () => {
     it('should decrement activeItemIdx if it is greater than 0', () => {
       const state: ClipsState = {
         activeItemIdx: 1,
-        ids: items.map((item) => item.data.name),
-        entities: items.reduce((acc, item) => ({ ...acc, [item.data.name]: item }), {}),
+        ids: items.map((item) => item.name),
+        entities: items.reduce((acc, item) => ({ ...acc, [item.name]: item }), {}),
       };
 
       const action = ClipsActions.showPrevItem();
@@ -144,8 +144,8 @@ describe('Clips Reducer', () => {
     it('should not change the state if activeItemIdx is the last item', () => {
       const state: ClipsState = {
         activeItemIdx: 2,
-        ids: items.map((item) => item.data.name),
-        entities: items.reduce((acc, item) => ({ ...acc, [item.data.name]: item }), {}),
+        ids: items.map((item) => item.name),
+        entities: items.reduce((acc, item) => ({ ...acc, [item.name]: item }), {}),
       };
 
       const action = ClipsActions.showNextItem();
@@ -157,8 +157,8 @@ describe('Clips Reducer', () => {
     it('should increment activeItemIdx if it is less than the items length', () => {
       const state: ClipsState = {
         activeItemIdx: 0,
-        ids: items.map((item) => item.data.name),
-        entities: items.reduce((acc, item) => ({ ...acc, [item.data.name]: item }), {}),
+        ids: items.map((item) => item.name),
+        entities: items.reduce((acc, item) => ({ ...acc, [item.name]: item }), {}),
       };
 
       const action = ClipsActions.showNextItem();
