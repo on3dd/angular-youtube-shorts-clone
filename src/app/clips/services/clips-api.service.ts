@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { RedditListingObj, RedditPostData, RedditPostObj } from 'src/app/shared/types/reddit.types';
 
 // TODO: provide this via DI token + update tests then
@@ -13,11 +13,21 @@ export const BASE_URL = 'https://www.reddit.com/r/TikTokCringe';
 export class ClipsApiService {
   private readonly http = inject(HttpClient);
 
-  getInitialPost(name?: RedditPostData['name']): Observable<RedditPostData> {
-    return name ? this.getPostById(name) : this.getFirstPost();
+  getInitialPost(id?: RedditPostData['id']): Observable<RedditPostData> {
+    const source = id ? this.getPostById(id) : this.getFirstPost();
+
+    return source.pipe(
+      switchMap((post) => {
+        const populatedPost = this.filterPostsWithMedia([post])[0];
+
+        return populatedPost?.secure_media?.reddit_video
+          ? of(populatedPost)
+          : this.getPostById(populatedPost.id).pipe(map((post) => post.data));
+      }),
+    );
   }
 
-  getFirstPost(): Observable<RedditPostData> {
+  getFirstPost(): Observable<RedditPostObj> {
     return (
       this.http
         .get<RedditListingObj<RedditPostObj>>(`${BASE_URL}/hot.json`, {
@@ -25,16 +35,16 @@ export class ClipsApiService {
           responseType: 'json',
         })
         // Get last post in the list because Reddit API can put subreddit's pinned posts in front of the actual response
-        .pipe(map((response) => response.data.children.at(-1)!.data as RedditPostData))
+        .pipe(map((response) => response.data.children.at(-1)!))
     );
   }
 
-  getPostById(id: RedditPostData['id']): Observable<RedditPostData> {
+  getPostById(id: RedditPostData['id']): Observable<RedditPostObj> {
     return this.http
       .get<
         RedditListingObj<RedditPostObj>[]
       >(`${BASE_URL}/comments/${id}.json`, { params: { limit: 1 }, responseType: 'json' })
-      .pipe(map((response) => response[0].data.children[0].data as RedditPostData));
+      .pipe(map((response) => response[0].data.children[0]!));
   }
 
   getPosts(after?: RedditPostData['name'] | null, count?: number): Observable<RedditPostData[]> {

@@ -9,7 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, pairwise, startWith } from 'rxjs';
+import { distinctUntilChanged, startWith } from 'rxjs';
 import {
   MediaWrapperComponent,
   MediaWrapperSources,
@@ -51,11 +51,17 @@ export class ClipVideoComponent {
       toObservable(this.active, { injector: this.injector })
         .pipe(
           startWith(false),
-          pairwise(),
-          filter(([prev, curr]) => prev !== curr),
+          distinctUntilChanged((prev, curr) => prev === curr),
         )
-        .subscribe(([, curr]) => {
+        .subscribe((curr) => {
+          if (curr) {
+            console.log('curr', curr);
+            console.log('this.data()', this.data());
+            console.log('this.data().secure_media', this.data().secure_media);
+          }
+
           const mediaWrapper = this.mediaWrapperRef();
+
           if (curr) {
             mediaWrapper.reset();
             mediaWrapper.play();

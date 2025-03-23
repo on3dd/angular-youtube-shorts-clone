@@ -59,14 +59,14 @@ export class ClipsEffects {
 
   readonly loadInitialPost$ = createEffect(() => {
     return this.initialId$.pipe(
-      switchMap((name) => {
+      switchMap((id) => {
         const transferedItems = this.transferState.get(CLIPS_STATE_KEY, []);
 
         if (transferedItems.length > 0) {
           return of(ClipsActions.setTransferedState({ items: transferedItems }));
         }
 
-        return this.clipsApiService.getInitialPost(name).pipe(
+        return this.clipsApiService.getInitialPost(id).pipe(
           mapResponse({
             next: (item) => ClipsActions.loadInitialClipSuccess({ item }),
             error: (error) => ClipsActions.loadInitialClipFailure({ error }),
