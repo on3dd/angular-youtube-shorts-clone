@@ -54,12 +54,6 @@ export class ClipVideoComponent {
           distinctUntilChanged((prev, curr) => prev === curr),
         )
         .subscribe((curr) => {
-          if (curr) {
-            console.log('curr', curr);
-            console.log('this.data()', this.data());
-            console.log('this.data().secure_media', this.data().secure_media);
-          }
-
           const mediaWrapper = this.mediaWrapperRef();
 
           if (curr) {
