@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RedditListingObj, RedditPostData, RedditPostObj } from 'src/app/shared/types/reddit.types';
 
 // TODO: provide this via DI token + update tests then
@@ -16,15 +16,7 @@ export class ClipsApiService {
   getInitialPost(id?: RedditPostData['id']): Observable<RedditPostData> {
     const source = id ? this.getPostById(id) : this.getFirstPost();
 
-    return source.pipe(
-      switchMap((post) => {
-        const populatedPost = this.filterPostsWithMedia([post])[0];
-
-        return populatedPost?.secure_media?.reddit_video
-          ? of(populatedPost)
-          : this.getPostById(populatedPost.id).pipe(map((post) => post.data));
-      }),
-    );
+    return source.pipe(map((post) => this.filterPostsWithMedia(post)[0]));
   }
 
   getFirstPost(): Observable<RedditPostObj> {
@@ -41,18 +33,22 @@ export class ClipsApiService {
 
   getPostById(id: RedditPostData['id']): Observable<RedditPostObj> {
     return this.http
-      .get<
-        RedditListingObj<RedditPostObj>[]
-      >(`${BASE_URL}/comments/${id}.json`, { params: { limit: 1 }, responseType: 'json' })
-      .pipe(map((response) => response[0].data.children[0]!));
+      .get<RedditListingObj<RedditPostObj>[]>(`${BASE_URL}/comments/${id}.json`, {
+        params: { limit: 1 },
+        responseType: 'json',
+      })
+      .pipe(map((response) => response[0].data.children[0]));
   }
 
   getPosts(after?: RedditPostData['name'] | null, count?: number): Observable<RedditPostData[]> {
     const params = this.buildHttpParams({ after, count, limit: PAGE_SIZE });
 
     return this.http
-      .get<RedditListingObj<RedditPostObj>>(`${BASE_URL}/hot.json`, { params, responseType: 'json' })
-      .pipe(map((response) => this.filterPostsWithMedia(response.data.children)));
+      .get<RedditListingObj<RedditPostObj>>(`${BASE_URL}/hot.json`, {
+        params,
+        responseType: 'json',
+      })
+      .pipe(map((response) => this.filterPostsWithMedia(...response.data.children)));
   }
 
   private buildHttpParams(params: Record<string, unknown>): HttpParams {
@@ -62,7 +58,7 @@ export class ClipsApiService {
     );
   }
 
-  private filterPostsWithMedia(posts: RedditPostObj[]): RedditPostData[] {
+  private filterPostsWithMedia(...posts: RedditPostObj[]): RedditPostData[] {
     return (
       posts
         // Handle cases when post itself doesn't have a video, but has crossposts.
@@ -81,7 +77,7 @@ export class ClipsApiService {
         })
         .map((post) => post.data)
         // Filter out posts without media.
-        .filter((post) => post?.secure_media?.reddit_video)
+        .filter((post) => post.secure_media?.reddit_video)
     );
   }
 }
