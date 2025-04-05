@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RedditPostData } from 'src/app/shared/types/reddit.types';
 
 import { ClipOverlayComponent } from './clip-overlay.component';
 
@@ -13,10 +14,13 @@ describe('ClipOverlayComponent', () => {
 
     fixture = TestBed.createComponent(ClipOverlayComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    fixture.componentRef.setInput('data', {} as RedditPostData);
+    fixture.componentRef.setInput('active', true);
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
   });
 });

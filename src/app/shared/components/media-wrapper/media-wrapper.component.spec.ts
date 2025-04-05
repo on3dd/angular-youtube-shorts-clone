@@ -13,10 +13,17 @@ describe('MediaWrapperComponent', () => {
 
     fixture = TestBed.createComponent(MediaWrapperComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    fixture.componentRef.setInput('sources', {
+      hlsUrl: 'https://example.com/hls.m3u8',
+      dashUrl: 'https://example.com/dash.mpd',
+      fallbackUrl: 'https://example.com/fallback.mp4',
+    });
+    fixture.componentRef.setInput('active', true);
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
   });
 });

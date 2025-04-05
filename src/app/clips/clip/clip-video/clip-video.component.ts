@@ -49,10 +49,7 @@ export class ClipVideoComponent {
     afterNextRender(() => {
       // Automatically play or stop video playback on active change.
       toObservable(this.active, { injector: this.injector })
-        .pipe(
-          startWith(false),
-          distinctUntilChanged((prev, curr) => prev === curr),
-        )
+        .pipe(startWith(false), distinctUntilChanged())
         .subscribe((curr) => {
           const mediaWrapper = this.mediaWrapperRef();
 
