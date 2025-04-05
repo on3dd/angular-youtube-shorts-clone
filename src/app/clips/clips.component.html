@@ -1,19 +1,17 @@
-@if (vm(); as vm) {
-  <div
-    class="clips-container max-sm:w-full mx-auto sm:ml-[50%] sm:mr-[50%] max-w-full sm:max-w-[calc(100%-theme(width.12)-theme(spacing.3))]"
-  >
-    @for (item of vm.clips; track item.id; let idx = $index) {
-      <app-clip
-        [data]="item"
-        [active]="idx === vm.activeItemIdx"
-        (prevItem)="prevItem()"
-        (nextItem)="nextItem()"
-        (likeItem)="likeItem($event)"
-        (dislikeItem)="dislikeItem($event)"
-        (commentItem)="commentItem($event)"
-        (shareItem)="shareItem($event)"
-        (showMoreItem)="showMoreItem($event)"
-      />
-    }
-  </div>
-}
+<div
+  class="clips-container max-sm:w-full mx-auto sm:ml-[50%] sm:mr-[50%] max-w-full sm:max-w-[calc(100%-theme(width.12)-theme(spacing.3))]"
+>
+  @for (item of clips(); track item.id; let idx = $index) {
+    <app-clip
+      [data]="item"
+      [active]="idx === activeItemIdx()"
+      (prevItem)="prevItem()"
+      (nextItem)="nextItem()"
+      (likeItem)="likeItem($event)"
+      (dislikeItem)="dislikeItem($event)"
+      (commentItem)="commentItem($event)"
+      (shareItem)="shareItem($event)"
+      (showMoreItem)="showMoreItem($event)"
+    />
+  }
+</div>

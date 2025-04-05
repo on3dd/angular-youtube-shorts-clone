@@ -2,7 +2,6 @@ import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
-  computed,
   DestroyRef,
   effect,
   ElementRef,
@@ -17,7 +16,7 @@ import { ClipComponent } from './clip/clip.component';
 import { ClipsFacade } from './state/clips.facade';
 import { ClipsEntity } from './state/clips.models';
 
-const WHEEL_THROTTLE_TIME_MS = 1000;
+export const WHEEL_THROTTLE_TIME_MS = 1000;
 
 @Component({
   selector: 'app-clips',
@@ -32,14 +31,12 @@ export class ClipsComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly clipsFacade = inject(ClipsFacade);
 
-  private readonly clipsRefs = viewChildren<ClipComponent, ElementRef<HTMLElement>>(ClipComponent, {
+  readonly clipsRefs = viewChildren<ClipComponent, ElementRef<HTMLElement>>(ClipComponent, {
     read: ElementRef,
   });
 
-  protected readonly vm = computed(() => ({
-    clips: this.clipsFacade.clips(),
-    activeItemIdx: this.clipsFacade.activeItemIdx(),
-  }));
+  readonly clips = this.clipsFacade.clips;
+  readonly activeItemIdx = this.clipsFacade.activeItemIdx;
 
   constructor() {
     afterNextRender(() => {
@@ -55,7 +52,7 @@ export class ClipsComponent {
 
       effect(
         () => {
-          const idx = this.clipsFacade.activeItemIdx();
+          const idx = this.activeItemIdx();
 
           if (typeof idx === 'number') {
             const clipRef = this.clipsRefs()[idx];

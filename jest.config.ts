@@ -1,3 +1,5 @@
+import type { Config } from 'jest';
+
 export default {
   displayName: 'angular-shorts-clone',
   preset: './jest.preset.js',
@@ -19,4 +21,5 @@ export default {
     'jest-preset-angular/build/serializers/html-comment',
   ],
   testMatch: ['<rootDir>/src/**/__tests__/**/*.[jt]s?(x)', '<rootDir>/src/**/*(*.)@(spec|test).[jt]s?(x)'],
-};
+  testEnvironment: '@happy-dom/jest-environment',
+} satisfies Config;
